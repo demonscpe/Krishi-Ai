@@ -1,0 +1,110 @@
+/* ==========================================================================
+   GoTop Button — Scroll to top with circular scroll-progress fill
+   ========================================================================== */
+
+.go-top-btn {
+  /* --- Theme tokens (override these anywhere to re-skin the button) --- */
+  --go-top-size: 52px;
+  --go-top-ring: 3px;
+  --go-top-color-track: rgba(255, 255, 255, 0.15);
+  --go-top-color-fill: #22c55e;
+  --go-top-color-bg-start: #22c55e;
+  --go-top-color-bg-end: #15803d;
+  --go-top-color-bg-hover-start: #16a34a;
+  --go-top-color-bg-hover-end: #14532d;
+  --go-top-color-icon: #ffffff;
+  --go-top-shadow: 0 8px 22px rgba(21, 128, 61, 0.5);
+  --go-top-shadow-hover: 0 10px 26px rgba(21, 128, 61, 0.6);
+  --go-top-offset-right: 24px;
+  --go-top-offset-bottom-visible: 96px;
+  --go-top-offset-bottom-hidden: 24px;
+
+  position: fixed;
+  right: var(--go-top-offset-right);
+  bottom: var(--go-top-offset-bottom-hidden);
+  z-index: 40;
+  width: var(--go-top-size);
+  height: var(--go-top-size);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--go-top-ring);
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+
+  transition:
+    bottom 0.3s ease,
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    background 0.1s linear;
+}
+
+.go-top-btn.visible {
+  bottom: var(--go-top-offset-bottom-visible);
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.go-top-btn.go-top-hidden {
+  bottom: var(--go-top-offset-bottom-hidden);
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}
+
+/* Keyboard accessibility — visible focus ring without affecting mouse users */
+.go-top-btn:focus-visible {
+  outline: 2px solid var(--go-top-color-fill);
+  outline-offset: 3px;
+}
+
+.go-top-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(
+    135deg,
+    var(--go-top-color-bg-start),
+    var(--go-top-color-bg-end)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--go-top-shadow);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.go-top-btn:hover .go-top-inner {
+  background: linear-gradient(
+    135deg,
+    var(--go-top-color-bg-hover-start),
+    var(--go-top-color-bg-hover-end)
+  );
+  box-shadow: var(--go-top-shadow-hover);
+  transform: scale(1.06);
+}
+
+.go-top-btn:active .go-top-inner {
+  transform: scale(0.96);
+}
+
+.go-top-icon {
+  height: 20px;
+  width: 20px;
+  color: var(--go-top-color-icon);
+  pointer-events: none; /* clicks always register on the button, not the SVG */
+}
+
+/* Respect users who've asked for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .go-top-btn,
+  .go-top-inner {
+    transition: none;
+  }
+}

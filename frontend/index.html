@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Krishi-Ai</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- 🔥 Cursor Styles -->
+  <style>
+    .circle {
+      position: fixed;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+
+      background: radial-gradient(circle, transparent);
+      filter: blur(3px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- React root -->
+  <div id="root"></div>
+
+  <!-- React App -->
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- 🔥 CURSOR SCRIPT -->
+  <script>
+    window.addEventListener("load", function () {
+      const coords = { x: 0, y: 0 };
+      const circlesCount = 10;
+      const circles = [];
+
+      // ✅ Create circles directly in body
+      for (let i = 0; i < circlesCount; i++) {
+        const div = document.createElement("div");
+        div.classList.add("circle");
+        document.body.appendChild(div);
+        circles.push(div);
+      }
+
+      // Init positions
+      circles.forEach((circle) => {
+        circle.x = 0;
+        circle.y = 0;
+      });
+
+      // Mouse move
+      window.addEventListener("mousemove", function (e) {
+        coords.x = e.clientX;
+        coords.y = e.clientY;
+      });
+
+      // Animation loop
+      function animateCircles() {
+        let x = coords.x;
+        let y = coords.y;
+
+        circles.forEach((circle, index) => {
+          circle.style.left = x + "px";
+          circle.style.top = y + "px";
+          circle.style.transform = `scale(${(circles.length - index) / circles.length})`;
+
+          const next = circles[index + 1] || circles[0];
+
+          circle.x = x;
+          circle.y = y;
+
+          x += (next.x - x) * 0.2;
+          y += (next.y - y) * 0.2;
+        });
+
+        requestAnimationFrame(animateCircles);
+      }
+
+      animateCircles();
+    });
+  </script>
+
+  <!-- Botpress -->
+  <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/04/15/09/20260415092113-YVSV7AMG.js" defer></script>
+
+</body>
+</html>

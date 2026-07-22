@@ -1,0 +1,201 @@
+avg_r,avg_g,avg_b,std_r,std_g,std_b,brightness,soil_type,color,texture,condition
+147.0,89.3,53.0,10.7,10.7,9.0,96.4,Clay,Grey,Loamy,Wet
+106.1,125.4,45.9,29.5,27.0,15.8,92.5,Loamy,Dark Brown,Loamy,Wet
+101.0,72.2,50.7,15.3,13.0,18.4,74.6,Clay,Grey,Silty,Wet
+148.4,69.3,37.7,18.5,14.5,24.7,85.2,Clay,Grey,Sandy,Wet
+204.4,177.2,122.5,25.4,53.3,41.9,168.0,Sandy,Yellowish,Silty,Moist
+20.5,20.8,16.0,15.2,14.1,17.5,19.1,Black,Black,Clayey,Moist
+133.5,110.9,107.8,23.5,19.2,26.4,117.4,Alluvial,Brown,Sandy,Moist
+199.8,87.6,51.8,29.9,38.0,17.2,113.1,Red,Reddish,Clayey,Moist
+92.7,73.0,46.7,12.6,22.1,14.1,70.8,Clay,Grey,Loamy,Wet
+122.6,65.6,59.1,9.3,24.8,21.1,82.4,Clay,Grey,Loamy,Wet
+178.0,178.5,139.5,43.2,52.8,44.5,165.3,Sandy,Yellowish,Loamy,Moist
+38.7,23.3,11.6,9.7,9.9,15.9,24.5,Black,Black,Loamy,Moist
+163.2,128.3,76.0,29.3,30.2,26.2,122.5,Alluvial,Brown,Clayey,Moist
+139.6,131.4,91.4,15.5,17.2,15.6,120.8,Alluvial,Brown,Clayey,Moist
+29.4,27.7,32.7,8.7,11.2,16.3,29.9,Black,Black,Loamy,Moist
+74.6,104.5,52.3,28.7,26.5,23.4,77.1,Loamy,Dark Brown,Silty,Wet
+138.2,67.5,61.8,17.2,21.7,23.2,89.2,Clay,Grey,Clayey,Wet
+116.6,113.7,91.4,31.4,32.2,15.1,107.2,Alluvial,Brown,Loamy,Moist
+186.7,158.9,106.0,35.1,53.3,34.7,150.5,Sandy,Yellowish,Loamy,Moist
+32.1,16.6,16.3,8.7,15.4,15.7,21.7,Black,Black,Sandy,Moist
+49.9,21.7,34.4,11.2,5.5,10.2,35.3,Black,Black,Sandy,Wet
+197.2,171.2,122.4,41.6,42.8,27.4,163.6,Sandy,Yellowish,Loamy,Moist
+179.7,182.1,123.5,54.5,37.0,49.5,161.8,Sandy,Yellowish,Loamy,Moist
+24.5,27.7,27.4,17.9,9.9,8.3,26.5,Black,Black,Silty,Moist
+202.4,163.9,104.8,53.2,36.9,40.5,157.0,Sandy,Yellowish,Loamy,Moist
+40.3,33.4,15.2,13.1,15.4,8.4,29.6,Black,Black,Loamy,Moist
+218.4,70.7,32.8,39.9,39.1,29.0,107.3,Red,Reddish,Loamy,Moist
+177.5,161.2,135.0,50.4,50.7,37.1,157.9,Sandy,Yellowish,Sandy,Moist
+95.0,66.5,62.0,18.3,8.2,9.7,74.5,Clay,Grey,Clayey,Wet
+20.2,19.0,23.7,15.4,14.8,8.4,21.0,Black,Black,Sandy,Moist
+104.2,73.0,57.4,19.0,22.4,19.2,78.2,Clay,Grey,Sandy,Wet
+120.5,85.5,42.5,18.0,24.6,16.3,82.8,Clay,Grey,Loamy,Wet
+187.4,164.0,132.3,45.1,50.9,31.9,161.2,Sandy,Yellowish,Loamy,Moist
+192.9,180.7,102.2,54.8,39.1,33.4,158.6,Sandy,Yellowish,Silty,Moist
+199.9,188.1,116.5,41.6,42.2,54.4,168.2,Sandy,Yellowish,Loamy,Moist
+93.1,132.6,59.3,15.1,22.0,28.9,95.0,Loamy,Dark Brown,Silty,Wet
+192.8,153.9,130.8,54.7,29.2,40.5,159.1,Sandy,Yellowish,Silty,Moist
+196.7,77.9,46.1,24.0,22.3,35.2,106.9,Red,Reddish,Clayey,Moist
+208.0,86.5,40.3,27.5,35.0,31.2,111.6,Red,Reddish,Loamy,Moist
+157.7,153.4,86.9,22.5,16.9,26.6,132.7,Alluvial,Brown,Silty,Moist
+188.6,171.7,114.3,42.7,25.9,26.1,158.2,Sandy,Yellowish,Silty,Moist
+142.2,119.6,111.4,20.4,34.3,24.1,124.4,Alluvial,Brown,Silty,Moist
+81.7,110.6,76.5,14.5,14.4,29.5,89.6,Loamy,Dark Brown,Silty,Wet
+112.5,123.9,91.7,29.9,20.0,18.7,109.4,Alluvial,Brown,Silty,Moist
+40.7,16.5,32.9,11.6,8.6,6.4,30.0,Black,Black,Sandy,Moist
+86.8,137.7,78.2,22.0,23.0,19.6,100.9,Loamy,Dark Brown,Loamy,Moist
+162.0,80.3,25.4,17.9,16.2,16.0,89.3,Red,Reddish,Silty,Wet
+152.2,128.5,74.9,24.8,24.5,18.5,118.5,Alluvial,Brown,Silty,Moist
+93.9,120.8,73.6,12.8,18.7,23.3,96.1,Loamy,Dark Brown,Silty,Wet
+36.2,32.1,25.4,19.2,19.2,18.0,31.2,Black,Black,Loamy,Wet
+202.0,177.1,128.7,28.9,49.3,49.6,169.3,Sandy,Yellowish,Loamy,Moist
+202.8,176.1,110.3,33.2,31.4,36.3,163.1,Sandy,Yellowish,Sandy,Moist
+194.7,163.5,132.8,36.6,45.4,35.2,163.7,Sandy,Yellowish,Clayey,Moist
+34.9,32.3,18.7,19.0,5.6,11.3,28.6,Black,Black,Sandy,Moist
+36.4,25.6,24.2,13.6,16.0,6.9,28.7,Black,Black,Sandy,Moist
+143.7,114.3,104.0,29.8,19.8,22.6,120.7,Alluvial,Brown,Sandy,Moist
+139.8,123.4,84.9,17.0,16.1,34.2,116.0,Alluvial,Brown,Clayey,Moist
+111.3,98.3,55.3,16.2,16.4,9.4,88.3,Clay,Grey,Sandy,Wet
+194.1,172.1,110.6,53.4,48.4,28.4,159.0,Sandy,Yellowish,Sandy,Moist
+217.7,89.8,26.7,33.4,28.6,32.6,111.4,Red,Reddish,Clayey,Moist
+131.3,93.5,61.0,22.3,15.2,11.8,95.3,Clay,Grey,Sandy,Wet
+210.3,55.9,40.4,20.8,29.5,36.6,102.2,Red,Reddish,Silty,Moist
+104.2,96.3,52.8,14.0,20.0,16.2,84.4,Clay,Grey,Loamy,Wet
+152.3,114.9,86.5,23.7,20.1,23.1,117.9,Alluvial,Brown,Silty,Moist
+196.7,80.7,49.7,33.6,32.0,20.9,109.0,Red,Reddish,Sandy,Moist
+107.1,94.7,41.7,24.4,8.2,24.5,81.2,Clay,Grey,Sandy,Wet
+72.6,136.2,86.4,16.6,24.5,13.4,98.4,Loamy,Dark Brown,Clayey,Wet
+26.5,22.4,34.9,15.5,10.8,16.1,27.9,Black,Black,Clayey,Moist
+147.5,62.3,46.8,9.8,13.7,10.9,85.6,Clay,Grey,Loamy,Wet
+164.9,59.2,33.0,24.0,21.5,26.3,85.7,Red,Reddish,Clayey,Wet
+28.4,25.3,25.1,9.1,7.0,6.1,26.2,Black,Black,Silty,Moist
+167.5,73.2,52.6,17.1,36.9,28.8,97.8,Red,Reddish,Sandy,Wet
+43.3,27.0,34.6,10.7,16.2,10.9,35.0,Black,Black,Clayey,Wet
+192.8,152.5,101.8,29.0,25.4,27.3,149.0,Sandy,Yellowish,Loamy,Moist
+36.0,33.7,32.8,13.8,15.9,16.4,34.2,Black,Black,Clayey,Wet
+27.2,20.1,16.3,9.1,8.1,18.2,21.2,Black,Black,Loamy,Moist
+162.2,54.5,45.1,28.0,34.3,28.0,87.3,Red,Reddish,Loamy,Wet
+36.6,29.0,31.9,11.1,7.0,5.4,32.5,Black,Black,Clayey,Wet
+107.2,125.2,54.6,14.5,12.3,18.3,95.7,Loamy,Dark Brown,Silty,Wet
+165.3,67.5,52.1,23.7,27.8,34.6,95.0,Red,Reddish,Loamy,Wet
+147.3,151.7,117.5,17.9,33.5,24.8,138.8,Alluvial,Brown,Loamy,Moist
+117.5,99.2,49.8,13.6,18.8,12.1,88.8,Clay,Grey,Clayey,Wet
+33.8,29.6,20.0,15.5,7.7,15.4,27.8,Black,Black,Sandy,Moist
+205.0,170.6,148.7,43.1,31.7,49.7,174.7,Sandy,Yellowish,Silty,Moist
+110.9,61.3,51.5,17.1,14.1,23.2,74.5,Clay,Grey,Sandy,Wet
+129.8,119.3,74.6,24.6,28.8,25.2,107.9,Alluvial,Brown,Clayey,Moist
+70.2,133.4,48.8,22.8,29.8,21.7,84.1,Loamy,Dark Brown,Loamy,Wet
+124.2,145.6,96.6,29.4,16.2,18.0,122.1,Alluvial,Brown,Clayey,Moist
+205.8,170.5,126.6,28.2,38.4,41.0,167.6,Sandy,Yellowish,Clayey,Moist
+42.1,19.6,24.1,17.6,6.3,13.0,28.6,Black,Black,Sandy,Moist
+30.3,26.8,18.9,14.7,12.2,13.8,25.3,Black,Black,Silty,Moist
+180.2,73.5,41.9,24.5,23.4,37.5,98.5,Red,Reddish,Loamy,Wet
+152.0,69.9,34.9,38.3,15.2,20.6,85.6,Red,Reddish,Silty,Wet
+141.0,63.5,59.2,8.9,22.3,8.9,87.9,Clay,Grey,Clayey,Wet
+128.9,95.6,62.9,29.5,27.6,26.7,95.8,Loamy,Dark Brown,Sandy,Wet
+120.3,140.1,116.5,26.1,26.4,20.6,125.6,Alluvial,Brown,Loamy,Moist
+81.2,106.2,64.1,21.1,16.4,14.1,83.9,Loamy,Dark Brown,Silty,Wet
+127.3,134.9,77.7,24.6,25.7,16.0,113.3,Alluvial,Brown,Silty,Moist
+179.4,72.0,31.1,32.1,17.2,18.5,94.1,Red,Reddish,Sandy,Wet
+23.5,26.8,25.2,16.9,6.6,17.8,25.2,Black,Black,Loamy,Moist
+114.5,97.3,64.7,11.5,14.4,23.7,92.2,Clay,Grey,Loamy,Wet
+112.9,146.9,111.4,30.0,31.0,31.5,123.7,Alluvial,Brown,Sandy,Moist
+84.1,121.7,85.9,17.7,22.6,24.3,97.2,Loamy,Dark Brown,Loamy,Wet
+164.0,137.4,97.0,23.8,26.5,22.1,132.8,Alluvial,Brown,Clayey,Moist
+178.9,86.3,43.7,17.9,38.5,30.7,103.0,Red,Reddish,Loamy,Moist
+142.5,81.8,43.6,28.3,37.3,34.7,89.3,Red,Reddish,Silty,Wet
+29.4,21.2,28.6,5.5,13.5,16.4,26.4,Black,Black,Clayey,Moist
+160.8,82.9,28.3,36.2,18.2,24.9,90.7,Red,Reddish,Sandy,Wet
+99.2,110.4,79.7,12.2,22.8,22.2,96.5,Loamy,Dark Brown,Silty,Wet
+194.0,183.1,148.0,35.3,31.8,37.7,175.0,Sandy,Yellowish,Silty,Moist
+146.9,154.7,77.0,17.0,20.1,29.5,126.2,Alluvial,Brown,Clayey,Moist
+96.1,96.8,58.7,8.4,19.1,21.1,83.9,Clay,Grey,Clayey,Wet
+136.2,53.1,28.1,36.0,37.8,18.1,72.5,Red,Reddish,Sandy,Wet
+79.9,99.3,82.7,18.0,17.6,16.1,87.3,Loamy,Dark Brown,Clayey,Wet
+92.8,127.2,54.3,26.2,22.9,14.1,91.4,Loamy,Dark Brown,Loamy,Wet
+45.9,38.1,21.6,12.2,18.8,13.8,35.2,Black,Black,Clayey,Wet
+144.8,69.9,52.3,10.8,8.6,13.3,89.0,Clay,Grey,Sandy,Wet
+195.3,150.5,133.2,30.3,53.8,29.5,159.7,Sandy,Yellowish,Silty,Moist
+115.1,159.8,95.1,26.9,16.3,30.0,123.3,Alluvial,Brown,Clayey,Moist
+184.0,168.7,131.2,36.3,50.1,42.6,161.3,Sandy,Yellowish,Sandy,Moist
+152.8,131.7,96.7,24.6,24.9,30.3,127.1,Alluvial,Brown,Loamy,Moist
+30.0,16.9,28.8,9.1,18.5,12.9,25.2,Black,Black,Sandy,Moist
+140.4,94.7,47.2,17.4,12.3,11.3,94.1,Clay,Grey,Clayey,Wet
+105.7,107.0,70.6,28.0,22.0,25.0,94.4,Loamy,Dark Brown,Clayey,Wet
+146.2,148.4,118.1,33.9,17.8,23.1,137.6,Alluvial,Brown,Clayey,Moist
+131.2,53.4,31.2,15.7,19.5,29.6,71.9,Red,Reddish,Loamy,Wet
+210.3,82.7,35.3,21.5,24.5,29.8,109.4,Red,Reddish,Loamy,Moist
+127.4,76.4,51.6,15.4,13.0,24.1,85.1,Clay,Grey,Silty,Wet
+98.4,94.7,49.6,23.2,21.6,15.2,80.9,Clay,Grey,Clayey,Wet
+28.1,28.5,25.8,8.9,7.1,17.5,27.5,Black,Black,Loamy,Moist
+177.3,56.9,33.2,15.5,37.9,17.9,89.1,Red,Reddish,Loamy,Wet
+28.2,28.9,26.3,17.4,8.1,5.2,27.8,Black,Black,Sandy,Moist
+206.0,185.0,129.9,43.0,45.0,30.3,173.6,Sandy,Yellowish,Sandy,Moist
+32.6,24.6,23.0,5.7,7.5,16.1,26.7,Black,Black,Clayey,Moist
+106.2,102.3,62.5,17.2,18.4,24.9,90.3,Loamy,Dark Brown,Clayey,Wet
+208.0,165.9,147.7,29.1,39.5,33.1,173.8,Sandy,Yellowish,Clayey,Moist
+99.7,93.7,60.4,24.2,10.6,18.6,84.6,Clay,Grey,Silty,Wet
+90.7,107.6,63.6,24.7,22.8,20.3,87.3,Loamy,Dark Brown,Clayey,Wet
+173.1,150.1,148.4,25.2,28.1,34.4,157.2,Sandy,Yellowish,Clayey,Moist
+208.5,181.6,134.5,40.6,27.6,53.7,174.9,Sandy,Yellowish,Clayey,Moist
+115.5,126.2,73.7,29.7,28.3,23.6,105.1,Loamy,Dark Brown,Clayey,Moist
+134.6,76.8,26.3,29.7,40.0,28.9,79.3,Red,Reddish,Silty,Wet
+158.2,54.8,46.9,19.8,17.9,25.5,86.6,Red,Reddish,Sandy,Wet
+197.1,52.2,38.7,28.1,31.1,31.3,96.0,Red,Reddish,Loamy,Wet
+192.4,169.2,144.2,40.9,38.2,37.1,168.6,Sandy,Yellowish,Clayey,Moist
+36.2,31.5,28.4,12.8,11.4,18.1,32.0,Black,Black,Silty,Wet
+204.8,150.9,143.7,40.9,53.2,49.0,166.5,Sandy,Yellowish,Clayey,Moist
+131.0,146.0,90.1,24.6,27.6,32.5,122.4,Alluvial,Brown,Clayey,Moist
+43.0,25.4,20.5,16.1,8.6,6.7,29.7,Black,Black,Silty,Moist
+161.2,142.9,99.5,20.5,33.2,15.9,134.5,Alluvial,Brown,Clayey,Moist
+31.7,18.1,33.9,17.0,8.9,13.8,27.9,Black,Black,Clayey,Moist
+146.0,154.2,119.5,29.9,16.3,23.0,139.9,Alluvial,Brown,Sandy,Moist
+146.5,130.8,81.5,18.5,19.4,18.7,119.6,Alluvial,Brown,Clayey,Moist
+158.0,137.8,80.8,25.4,26.9,25.5,125.5,Alluvial,Brown,Clayey,Moist
+176.4,69.6,54.9,37.4,26.6,30.6,100.3,Red,Reddish,Sandy,Moist
+37.8,29.5,12.3,18.2,9.0,6.9,26.5,Black,Black,Sandy,Moist
+208.2,184.5,140.5,44.7,41.5,27.6,177.7,Sandy,Yellowish,Loamy,Moist
+112.4,70.4,56.7,16.4,9.4,11.7,79.8,Clay,Grey,Sandy,Wet
+94.6,94.0,49.9,16.2,18.1,22.0,79.5,Clay,Grey,Loamy,Wet
+178.9,84.6,47.0,28.0,36.7,21.1,103.5,Red,Reddish,Clayey,Moist
+176.4,163.4,111.9,52.9,28.2,46.0,150.6,Sandy,Yellowish,Loamy,Moist
+122.9,133.6,46.3,26.9,14.3,18.0,100.9,Loamy,Dark Brown,Silty,Moist
+203.6,83.3,40.2,15.2,22.2,30.4,109.0,Red,Reddish,Sandy,Moist
+39.0,21.5,25.9,13.1,16.7,6.6,28.8,Black,Black,Silty,Moist
+168.9,83.6,36.8,19.5,33.8,34.7,96.4,Red,Reddish,Loamy,Wet
+94.1,72.0,56.2,9.1,17.9,13.9,74.1,Clay,Grey,Silty,Wet
+204.1,189.6,133.8,38.4,44.4,42.8,175.8,Sandy,Yellowish,Loamy,Moist
+71.3,106.2,67.0,25.9,24.3,20.0,81.5,Loamy,Dark Brown,Silty,Wet
+219.7,67.0,38.5,19.1,34.9,32.3,108.4,Red,Reddish,Loamy,Moist
+199.6,59.2,28.9,36.7,39.1,15.8,95.9,Red,Reddish,Sandy,Wet
+124.6,132.9,88.4,25.7,20.0,17.6,115.3,Loamy,Dark Brown,Silty,Moist
+133.5,89.8,41.0,22.8,20.2,17.6,88.1,Clay,Grey,Loamy,Wet
+208.7,157.4,143.4,48.3,48.1,50.3,169.9,Sandy,Yellowish,Loamy,Moist
+201.9,161.8,145.6,54.0,30.6,38.9,169.7,Sandy,Yellowish,Silty,Moist
+145.9,136.4,82.4,26.2,19.5,18.2,121.6,Alluvial,Brown,Silty,Moist
+129.6,135.4,91.7,34.7,18.0,24.3,118.9,Alluvial,Brown,Silty,Moist
+173.2,74.0,33.7,32.4,36.5,34.5,93.6,Red,Reddish,Loamy,Wet
+189.2,154.2,112.1,54.6,29.3,40.0,151.8,Sandy,Yellowish,Silty,Moist
+132.1,82.4,35.3,13.5,16.8,9.5,83.3,Clay,Grey,Sandy,Wet
+112.0,104.7,89.8,17.7,26.4,28.8,102.2,Alluvial,Brown,Silty,Moist
+133.7,76.8,53.5,18.1,37.4,29.9,88.0,Red,Reddish,Sandy,Wet
+41.3,36.8,27.9,17.0,10.1,17.2,35.3,Black,Black,Clayey,Wet
+205.8,171.9,140.9,38.6,44.3,40.8,172.9,Sandy,Yellowish,Silty,Moist
+114.9,103.6,82.4,18.2,32.4,19.4,100.3,Alluvial,Brown,Clayey,Moist
+130.2,110.9,109.5,28.2,25.0,26.1,116.9,Alluvial,Brown,Silty,Moist
+179.1,189.9,148.7,44.5,31.0,45.4,172.6,Sandy,Yellowish,Sandy,Moist
+111.8,115.5,93.1,32.4,29.5,29.9,106.8,Alluvial,Brown,Loamy,Moist
+90.8,108.6,89.4,12.7,27.6,22.4,96.3,Loamy,Dark Brown,Loamy,Wet
+195.3,69.5,51.2,37.5,25.5,21.9,105.3,Red,Reddish,Clayey,Moist
+212.1,58.4,43.7,30.8,33.3,18.3,104.7,Red,Reddish,Loamy,Moist
+144.5,67.2,42.1,24.5,11.1,22.5,84.6,Clay,Grey,Sandy,Wet
+27.4,36.8,21.1,12.7,10.4,13.9,28.4,Black,Black,Silty,Moist
+31.7,39.2,16.5,14.9,9.9,16.6,29.1,Black,Black,Loamy,Moist
+148.2,78.2,42.1,9.2,10.9,16.8,89.5,Clay,Grey,Silty,Wet
+139.7,77.2,42.5,18.5,20.0,10.8,86.5,Clay,Grey,Loamy,Wet
+92.2,89.5,54.9,16.1,22.4,21.7,78.9,Clay,Grey,Loamy,Wet
+122.4,106.7,83.5,16.1,25.6,33.7,104.2,Alluvial,Brown,Sandy,Moist
+23.7,26.3,33.3,9.7,12.6,5.6,27.8,Black,Black,Silty,Moist
+149.2,98.6,35.1,24.2,18.9,22.8,94.3,Clay,Grey,Clayey,Wet
+189.6,176.7,107.0,25.9,34.2,46.1,157.7,Sandy,Yellowish,Silty,Moist

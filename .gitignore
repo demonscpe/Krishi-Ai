@@ -1,0 +1,49 @@
+frontend/node_modules/
+frontend/.vite/
+node_modules/
+.vite/
+dist/
+build/
+.env
+*.log
+# ML models
+*.tflite
+*.h5
+*.pt
+*.pkl
+# dependencies
+node_modules/
+frontend/node_modules/
+
+# build
+dist/
+build/
+.vite/
+frontend/.vite/
+
+# env
+.env
+
+# logs
+*.log
+
+# ML models (IMPORTANT)
+*.tflite
+*.h5
+*.pt
+*.pkl
+
+# Python virtual environments
+.venv/
+.venv_py315/
+venv/
+env/
+myenv/
+.venv*/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python

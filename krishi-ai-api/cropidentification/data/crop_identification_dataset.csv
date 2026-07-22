@@ -1,0 +1,16 @@
+crop_name,leaf_color,stem_type,fruit_type,season,family,description
+rice,light_green,hollow_cylindrical,grain,kharif,Poaceae,Staple cereal grown in flooded paddies
+wheat,green,solid_cylindrical,grain,rabi,Poaceae,Cool-season cereal with golden spikes at maturity
+maize,dark_green,solid_thick,cob,kharif,Poaceae,Tall cereal with large cobs and silky tassels
+cotton,green,woody_branched,boll,kharif,Malvaceae,Shrubby plant with white fluffy bolls
+sugarcane,dark_green,thick_jointed,none,kharif,Poaceae,Tall perennial grass with sweet juice-filled stems
+tomato,medium_green,herbaceous,berry,kharif,Solanaceae,Warm-season vegetable with red/yellow fruits
+potato,dark_green,herbaceous,tuber,rabi,Solanaceae,Cool-season tuber crop with underground starchy tubers
+onion,blue_green,hollow_tubular,bulb,rabi,Amaryllidaceae,Bulb vegetable with pungent smell
+soybean,green,erect_branched,pod,kharif,Fabaceae,Nitrogen-fixing legume with oil-rich seeds
+groundnut,green,low_spreading,pod,kharif,Fabaceae,Legume with underground pods containing oil-rich seeds
+chickpea,grey_green,erect_branched,pod,rabi,Fabaceae,Cool-season legume with small round seeds
+mustard,green,erect_branched,silique,rabi,Brassicaceae,Oilseed crop with yellow flowers
+sunflower,dark_green,tall_erect,head,kharif,Asteraceae,Tall oilseed crop with large yellow flower heads
+jute,green,tall_erect,capsule,kharif,Malvaceae,Fiber crop with long golden stems
+barley,green,hollow_cylindrical,grain,rabi,Poaceae,Hardy cereal with bearded spikes

@@ -1,0 +1,16 @@
+Previous Crop,Year1_Crop,Year2_Crop,Year3_Crop,Soil_Health_Start,Soil_Health_End,Fertilizer_Reduction_Pct,Disease_Suppression_Pct
+Rice,Chickpea,Wheat,Mustard,45,75,35,60
+Wheat,Soybean,Mustard,Maize,50,80,70,80
+Maize,Chickpea,Wheat,Mustard,40,70,35,60
+Cotton,Chickpea,Mustard,Wheat,45,75,35,60
+Groundnut,Wheat,Mustard,Chickpea,55,80,35,60
+Soybean,Wheat,Mustard,Groundnut,60,85,35,60
+Rice,Wheat,Chickpea,Mustard,45,72,35,60
+Wheat,Maize,Chickpea,Mustard,50,75,35,60
+Maize,Soybean,Wheat,Chickpea,40,78,70,80
+Cotton,Wheat,Chickpea,Mustard,42,72,35,60
+Groundnut,Maize,Wheat,Chickpea,55,78,35,60
+Soybean,Maize,Chickpea,Wheat,60,82,35,60
+Rice,Mustard,Chickpea,Wheat,45,70,35,60
+Wheat,Chickpea,Maize,Mustard,50,78,35,60
+Maize,Mustard,Chickpea,Soybean,40,75,70,80
