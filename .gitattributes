@@ -1,0 +1,49 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Explicitly declare text files with LF (Unix) line endings
+*.py text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+
+# Explicitly declare text files with CRLF (Windows) line endings
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# CSV and data files - keep as is
+*.csv text eol=crlf
+
+# Binary files - treat as binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+*.tflite binary
+*.h5 binary
+*.pt binary
+*.pkl binary
+*.joblib binary
+*.pickle binary
+
+# Environment files
+.env text eol=lf
+.env.sample text eol=lf
+.env.example text eol=lf
+

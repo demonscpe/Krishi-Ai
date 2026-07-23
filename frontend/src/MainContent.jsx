@@ -112,6 +112,10 @@ import DiseaseChatbot from './components/models/DiseaseChatbot';
 import DiseaseHistoryDashboard from './components/models/DiseaseHistoryDashboard';
 import { DiseaseProvider } from './context/DiseaseContext';
 
+// Nursery Platform
+import NurseryHub from './components/models/NurseryHub';
+import { NurseryProvider } from './context/NurseryContext';
+
 const MainContent = () => {
   UseScrollToTop();
   const location = useLocation(); // Get the current route
@@ -171,6 +175,8 @@ const MainContent = () => {
                 <Route path="/disease/prevention" element={<ProtectedRoute><DiseaseProvider><DiseasePrevention /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/chatbot" element={<ProtectedRoute><DiseaseProvider><DiseaseChatbot /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/history" element={<ProtectedRoute><DiseaseProvider><DiseaseHistoryDashboard /></DiseaseProvider></ProtectedRoute>} />
+                {/* Nursery Hub */}
+                <Route path="/nursery" element={<ProtectedRoute><NurseryProvider><NurseryHub /></NurseryProvider></ProtectedRoute>} />
                 <Route path="/crop_recommendation" element={<ProtectedRoute><CropRotationRecommendation /></ProtectedRoute>} />
                 <Route path="/crop-identification" element={<ProtectedRoute><Cropidentification /></ProtectedRoute>} />
                 <Route path="/crop_Rotation_AI" element={<ProtectedRoute><CropRotationPlan /></ProtectedRoute>} />

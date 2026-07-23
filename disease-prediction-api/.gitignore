@@ -1,11 +1,30 @@
-Include
-Lib
-Scripts
-pyvenv.cfg
-share
-Library
-test_images
-plant_disease_model_1_latest.pt
-__pycache__
+# Python virtual environment
+.venv/
+venv/
+env/
+myenv/
+Include/
+Lib/
+Scripts/
+share/
+Library/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# ML models
+*.tflite
+*.h5
+*.pt
+*.pkl
+*.joblib
+
+# Test / upload images
+test_images/
+uploaded_image/
+
+# Environment
+.env
 
 

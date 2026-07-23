@@ -350,7 +350,7 @@ Krishi-AI/
 │   ├── models/yolov8_animals.pt    # Trained YOLOv8 model
 │   └── requirements.txt
 │
-├── 📁 agrotech-ai-apis/            # Python Flask AI APIs
+├── 📁 krishi-ai-apis/            # Python Flask AI APIs
 │   ├── app.py                      # Main Flask app
 │   ├── crop_recommendation.py      # Crop recommendation API
 │   ├── plant_disease_detection.py  # Disease detection API
@@ -360,7 +360,7 @@ Krishi-AI/
 │   ├── models/                     # Trained ML/DL models
 │   └── requirements.txt
 │
-├── 📁 agrotech-ai-chatbot/         # AI Chatbot Service
+├── 📁 krishi-ai-chatbot/         # AI Chatbot Service
 │   └── src/main.py
 │
 ├── 📁 irrigation-api/              # Irrigation Prediction API
@@ -489,7 +489,7 @@ GOOGLE_CLIENT_SECRET=<google_oauth_secret>
 
 ```env
 VITE_API_URL=http://localhost:5000
-VITE_AI_API_URL=https://agrotech-ai-11j3.onrender.com
+VITE_AI_API_URL=http://localhost:8000
 VITE_WEATHER_API_KEY=<openweather_api_key>
 VITE_GOOGLE_MAPS_KEY=<google_maps_api_key>
 ```
@@ -547,7 +547,7 @@ npm run dev
 ### 3. Python AI APIs Setup
 
 ```bash
-cd agrotech-ai-apis
+cd krishi-ai-apis
 python -m venv venv
 venv\Scripts\activate       # Windows
 pip install -r requirements.txt
@@ -685,7 +685,7 @@ git push origin feature/AmazingFeature
 > Yes, the core features are free. Premium analytics and marketplace features may be subscription-based.
 
 **Q: Can I add my own AI model?**
-> Yes! The Flask API architecture is modular. Add a new route in `agrotech-ai-apis/app.py`.
+Add a new route in `krishi-ai-apis/app.py`.
 
 ---
 

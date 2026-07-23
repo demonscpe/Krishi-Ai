@@ -1,9 +1,28 @@
-Include
-Lib
-Scripts
-pyvenv.cfg
+# Python virtual environment
+.venv/
+venv/
+env/
+myenv/
+Include/
+Lib/
+Scripts/
+share/
+Library/
+
+# Python cache
+__pycache__/
+*.pyc
+
 # ML models
 *.tflite
 *.h5
 *.pt
 *.pkl
+*.joblib
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/

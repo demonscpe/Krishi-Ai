@@ -51,6 +51,12 @@ const Navbar = () => {
     '/PlantTaskReminder',
     '/Climate',
     '/KrishiTradeAI',
+    '/nursery',
+    '/nursery/search',
+    '/nursery/orders',
+    '/nursery/inventory',
+    '/nursery/dashboard',
+    '/nursery/profile',
   ]);
 
   const closeAll = () => {
@@ -264,6 +270,36 @@ const Navbar = () => {
             )}
           </div>
 
+          {/* Nursery Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => handleDropdownToggle('nursery')}
+              className={`${baseLink} ${
+                openDropdown === 'nursery' || location.pathname.startsWith('/nursery')
+                  ? `text-green-700 ${activeLinkStyle}`
+                  : "text-gray-600 hover:text-green-700"
+              }`}
+            >
+              Nursery
+              <FaChevronDown
+                className={`text-[10px] transition-transform duration-200 ${
+                  openDropdown === 'nursery' ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+            {openDropdown === 'nursery' && (
+              <div className="absolute top-full left-0 mt-3 w-56 bg-white shadow-xl border border-gray-100 py-2 rounded-xl z-50">
+                <div className="absolute -top-1.5 left-5 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45" />
+                <NavLink to="/nursery" className={dropdownItemClass} onClick={(e) => { handleProtectedNavigation(e, '/nursery', 'Nursery Hub'); closeAll(); }}>Nursery Hub</NavLink>
+                <NavLink to="/nursery/search" className={dropdownItemClass} onClick={(e) => { handleProtectedNavigation(e, '/nursery/search', 'Browse Nurseries'); closeAll(); }}>Browse Nurseries</NavLink>
+                <NavLink to="/nursery/orders" className={dropdownItemClass} onClick={(e) => { handleProtectedNavigation(e, '/nursery/orders', 'My Orders'); closeAll(); }}>My Orders</NavLink>
+                <NavLink to="/nursery/inventory" className={dropdownItemClass} onClick={(e) => { handleProtectedNavigation(e, '/nursery/inventory', 'Inventory'); closeAll(); }}>Inventory</NavLink>
+                <NavLink to="/nursery/dashboard" className={dropdownItemClass} onClick={(e) => { handleProtectedNavigation(e, '/nursery/dashboard', 'Dashboard'); closeAll(); }}>Dashboard</NavLink>
+                <NavLink to="/nursery/profile" className={dropdownItemClass} onClick={(e) => { handleProtectedNavigation(e, '/nursery/profile', 'Profile'); closeAll(); }}>Profile</NavLink>
+              </div>
+            )}
+          </div>
+
           <NavLink
             to="/KrishiTradeAI"
             className={navLinkClass}
@@ -421,6 +457,23 @@ const Navbar = () => {
               }
             >
               Disease
+            </NavLink>
+
+            <NavLink
+              to="/nursery"
+              onClick={(e) => {
+                handleProtectedNavigation(e, '/nursery', 'Nursery');
+                closeAll();
+              }}
+              className={({ isActive }) =>
+                `block px-3 py-2.5 rounded-lg text-[14px] font-semibold ${
+                  isActive
+                    ? "bg-green-50 text-green-700"
+                    : "text-gray-700 hover:bg-gray-50"
+                }`
+              }
+            >
+              Nursery
             </NavLink>
 
             <NavLink

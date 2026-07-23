@@ -41,7 +41,7 @@ premade_requests = {
     "What is Krishi-Ai?": (
         "Krishi-Ai is a cutting-edge platform that uses artificial intelligence to improve farming practices. "
         "It helps farmers make better decisions by providing insights based on data, ultimately leading to more efficient and productive agriculture. "
-        "To learn more about us, feel free to visit our <a href='https://agro-tech-ai.vercel.app/aboutus' style='color: blue; text-decoration: underline;'>About Us page</a>."
+"To learn more about us, feel free to visit our <a href='https://krishi-ai.vercel.app/aboutus' style='color: blue; text-decoration: underline;'>About Us page</a>."
     ),
     "How does the equipment rental platform work?": (
         "Our equipment rental platform lets farmers easily rent advanced farming equipment when they need it. "
@@ -52,16 +52,16 @@ premade_requests = {
         "These modules cover everything from basic operations to advanced features, ensuring that you feel confident in using our tools."
     ),
     "How do I get started with Krishi-Ai?": (
-        "To get started, go to the <a href='https://agro-tech-ai.vercel.app/login' style='color: blue; text-decoration: underline;'>Login</a> in the navigation bar. "
-        "From there, select 'Don’t have an account? Sign Up' and fill in your name, email, and password to explore our AI-powered tools and services!"
+        "To get started, go to the <a href='https://krishi-ai.vercel.app/login' style='color: blue; text-decoration: underline;'>Login</a> in the navigation bar. "
+        "From there, select 'Don't have an account? Sign Up' and fill in your name, email, and password to explore our AI-powered tools and services!"
     ),
     "Why use AI in agriculture?": (
         "AI optimizes resources, predicts crop yields, and reduces waste, improving the overall efficiency of farming practices. "
-        "Check out our <a href='https://agro-tech-ai.vercel.app' style='color: blue; text-decoration: underline;'>home page</a> to learn more."
+        "Check out our <a href='https://krishi-ai.vercel.app' style='color: blue; text-decoration: underline;'>home page</a> to learn more."
     ),
     "How do we do it?": (
         "We use machine learning models to analyze data, optimize crop yields, and automate various agricultural processes. "
-        "Visit our <a href='https://agro-tech-ai.vercel.app/aboutus' style='color: blue; text-decoration: underline;'>About Us page</a> to learn more about our approach."
+        "Visit our <a href='https://krishi-ai.vercel.app/aboutus' style='color: blue; text-decoration: underline;'>About Us page</a> to learn more about our approach."
     ),
     "What kind of solutions does Krishi-Ai offer?": (
         "Krishi-Ai offers solutions like precision farming, automated irrigation, and pest control using AI-driven analytics. "
@@ -69,14 +69,14 @@ premade_requests = {
     ),
     "What features does Krishi-Ai offer?": (
         "Our platform provides features such as soil analysis, crop monitoring, and AI-driven decision-making tools. "
-        "Check out the navigation bar on our <a href='https://agro-tech-ai.vercel.app' style='color: blue; text-decoration: underline;'>website</a> to access all the features available."
+        "Check out the navigation bar on our <a href='https://krishi-ai.vercel.app' style='color: blue; text-decoration: underline;'>website</a> to access all the features available."
     ),
     "How do I create an account?": (
-        "To sign up, go to the <a href='https://agro-tech-ai.vercel.app/login' style='color: blue; text-decoration: underline;'>Login</a> in the navigation bar, then select 'Don’t have an account? Sign Up.' "
+        "To sign up, go to the <a href='https://krishi-ai.vercel.app/login' style='color: blue; text-decoration: underline;'>Login</a> in the navigation bar, then select 'Don't have an account? Sign Up.' "
         "Fill in your name, email, and password, and you're done! You'll then be able to start exploring our amazing features."
     ),
     "Where can I find more information about your features?": (
-        "You can find detailed information about all our features on our <a href='https://agro-tech-ai.vercel.app' style='color: blue; text-decoration: underline;'>home page</a>. "
+        "You can find detailed information about all our features on our <a href='https://krishi-ai.vercel.app' style='color: blue; text-decoration: underline;'>home page</a>. "
         "This area provides insights into how each tool works and how it can benefit your farming practices."
     )
 }
@@ -96,7 +96,8 @@ def is_rate_limited(ip):
     rate_limit_store[ip].append(current_time)
     return False
 
-@app.route('/AgroTech-ChatBot', methods=['POST'])
+@app.route('/Krishi-ChatBot', methods=['POST'])</old_str>
+</edit_file>
 def chat():
     ip = request.remote_addr
     if is_rate_limited(ip):

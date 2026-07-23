@@ -9,6 +9,7 @@ const oauthRoutes = require("./modules/oauth/oauth.routes");
 const rentRoutes = require("./modules/rent/rent.routes");
 const shopRoutes = require("./modules/shop/product.routes");
 const cropRoutes = require("./modules/crop/crop.routes");
+const nurseryRoutes = require("./modules/nursery/nursery.routes");
 
 const errorMiddleware = require("./middleware/error.middleware");
 
@@ -27,6 +28,7 @@ app.use("/api/oauth", oauthRoutes);
 app.use("/api/rent", rentRoutes);
 app.use("/api/shop", shopRoutes);
 app.use("/api/crop", cropRoutes);
+app.use("/api/nursery", nurseryRoutes);
 
 // Health check
 app.get("/", (req, res) => {
