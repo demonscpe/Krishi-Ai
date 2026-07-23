@@ -9,7 +9,7 @@ const modules = [
   { path: '/disease/treatment', icon: Pill, label: 'Treatment', desc: 'Get chemical and organic treatment recommendations', color: 'from-blue-500 to-blue-600', shadow: 'shadow-blue-100' },
   { path: '/disease/prevention', icon: Shield, label: 'Prevention Guide', desc: 'Learn prevention methods and best practices', color: 'from-teal-500 to-teal-600', shadow: 'shadow-teal-100' },
   { path: '/disease/chatbot', icon: Bot, label: 'AI Plant Doctor', desc: 'Chat with AI assistant about plant health', color: 'from-purple-500 to-purple-600', shadow: 'shadow-purple-100' },
-  { path: '/disease/report', icon: FileText, label: 'Disease Report', desc: 'Download comprehensive PDF reports', color: 'from-indigo-500 to-indigo-600', shadow: 'shadow-indigo-100' },
+  { path: '/disease/history', icon: FileText, label: 'Disease Report', desc: 'Download comprehensive PDF reports', color: 'from-indigo-500 to-indigo-600', shadow: 'shadow-indigo-100' },
   { path: '/disease/history', icon: BarChart3, label: 'History', desc: 'View disease history and analytics dashboard', color: 'from-cyan-500 to-cyan-600', shadow: 'shadow-cyan-100' },
 ];
 

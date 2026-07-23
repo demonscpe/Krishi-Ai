@@ -37,7 +37,7 @@ import Climate from './components/help/Climate';
 import Products from "./pages/Products";
 import Market from './pages/Market';
 import AuthPage from './components/AuthPage';
-import WhyAI from './pages/WhyAI'; // Import the WhyAI component
+import WhyAI from './pages/WhyAI';
 import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage';
 import { AuthProvider } from './context/AuthContext';
@@ -45,7 +45,6 @@ import TermsAndConditions from './components/TermsAndConditions';
 import CookiePolicy from './components/CookiePolicy';
 import PlantTaskReminder from './components/tools/PlantTaskReminder';
 import CodeOfConduct from './components/CodeOfConduct';
-
 import MushroomEdibility from './components/models/Mushroom';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import Licensing from './components/Licensing';
@@ -60,12 +59,8 @@ import NavigateProducts from './AgroRentAI/NavigateProducts';
 import RentUserDashboard from './AgroRentAI/RentUserDashboard';
 import RentCheckoutPage from './AgroRentAI/RentCheckoutPage';
 import RentCartPage from './AgroRentAI/Cart';
-
 import RentProductDetails from './AgroRentAI/RentProductDetails';
-
-
 import RentAdminDashboard from './AgroRentAI/RentAdminDashboard';
-
 //AgroShopAI
 import HomeShop from './AgroShopAI/pages/HomeShop';
 import ShopFooter from './AgroShopAI/components/ShopFooter';
@@ -87,18 +82,12 @@ import GrievanceRedressal from './AgroShopAI/pages/FooterPages/Grievance';
 import ForgotPasswordPage from './components/ForgotPassword';
 import AccountVerificationPage from './components/EmailVerification';
 import OAuthSuccess from './components/OAuthSuccess';
-
 import FAQ from './AgroShopAI/pages/Faq';
 import GeminiChat from './components/tools/GeminiChat';
 import ResendVerificationPage from './components/ResendVerification';
-
 import DiscussionForum from './components/DiscussionForum';
-
 import AiChatbot from './components/AiChatbot';
-
-
 import WaterManagement from './components/models/WaterManagement';
-
 import RentSupportPage from './AgroRentAI/components/RentSupportPage';
 
 // Disease Intelligence Platform
@@ -110,25 +99,30 @@ import TreatmentRecommendation from './components/models/TreatmentRecommendation
 import DiseasePrevention from './components/models/DiseasePrevention';
 import DiseaseChatbot from './components/models/DiseaseChatbot';
 import DiseaseHistoryDashboard from './components/models/DiseaseHistoryDashboard';
+import DiseaseReport from './components/models/DiseaseReport';
 import { DiseaseProvider } from './context/DiseaseContext';
 
 // Nursery Platform
 import NurseryHub from './components/models/NurseryHub';
+import NurserySearch from './components/models/NurserySearch';
+import NurseryOrders from './components/models/NurseryOrders';
+import NurseryInventory from './components/models/NurseryInventory';
+import NurseryDashboard from './components/models/NurseryDashboard';
+import NurseryProfile from './components/models/NurseryProfile';
 import { NurseryProvider } from './context/NurseryContext';
 
 const MainContent = () => {
   UseScrollToTop();
-  const location = useLocation(); // Get the current route
+  const location = useLocation();
   const [isPreloaderVisible, setIsPreloaderVisible] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsPreloaderVisible(false);
-    }, 5000); // Preloader visible for 5 seconds
+    }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
-  // Check if the current path is the one you want to hide the Navbar for
   const normalizePath = (path) => path.toLowerCase().replace(/^\/+|\/+$/g, '');
   const hideNavbarRoutes = ['navigateproducts', '404'];
   const agroShopRoute = 'agroshop';
@@ -146,9 +140,9 @@ const MainContent = () => {
             <AiChatbot />
             <ProgressScrollDown />
             <div>
-              {!hideNavbar ? <Navbar /> : <ShopNavbar />} {/* Conditional rendering for Navbar */}
+              {!hideNavbar ? <Navbar /> : <ShopNavbar />}
               <Routes>
-                <Route path="/thank-you" element={<Feedback />} /> {/* Thank You Page Route */}
+                <Route path="/thank-you" element={<Feedback />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/licensing" element={<Licensing />} />
                 <Route path="/" element={<Home />} />
@@ -159,14 +153,14 @@ const MainContent = () => {
                 <Route path="/crop" element={<ProtectedRoute><Crop /></ProtectedRoute>} />
                 <Route path="/water-management" element={<ProtectedRoute><WaterManagement /></ProtectedRoute>} />
                 <Route path="/fertilizer" element={<ProtectedRoute><Fertilizer /></ProtectedRoute>} />
-                {/* Soil Hub - dashboard with cards linking to sub-modules */}
+                {/* Soil Hub */}
                 <Route path="/soil" element={<ProtectedRoute><SoilHub /></ProtectedRoute>} />
                 <Route path="/soil/image-analysis" element={<ProtectedRoute><SoilImageAnalysis /></ProtectedRoute>} />
                 <Route path="/soil/test-input" element={<ProtectedRoute><SoilTestInput /></ProtectedRoute>} />
                 <Route path="/soil/health-analyzer" element={<ProtectedRoute><SoilHealthAnalyzer /></ProtectedRoute>} />
                 <Route path="/soil/fertilizer" element={<ProtectedRoute><SoilFertilizerRecommendation /></ProtectedRoute>} />
                 <Route path="/soil/quality" element={<ProtectedRoute><SoilQuality /></ProtectedRoute>} />
-                {/* Disease Hub + Sub-modules */}
+                {/* Disease Hub */}
                 <Route path="/disease" element={<ProtectedRoute><DiseaseProvider><DiseaseHub /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/identify" element={<ProtectedRoute><DiseaseProvider><PlantIdentification /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/detect" element={<ProtectedRoute><DiseaseProvider><DiseaseDetection /></DiseaseProvider></ProtectedRoute>} />
@@ -175,29 +169,30 @@ const MainContent = () => {
                 <Route path="/disease/prevention" element={<ProtectedRoute><DiseaseProvider><DiseasePrevention /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/chatbot" element={<ProtectedRoute><DiseaseProvider><DiseaseChatbot /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/history" element={<ProtectedRoute><DiseaseProvider><DiseaseHistoryDashboard /></DiseaseProvider></ProtectedRoute>} />
+                <Route path="/disease/report" element={<ProtectedRoute><DiseaseProvider><DiseaseReport /></DiseaseProvider></ProtectedRoute>} />
                 {/* Nursery Hub */}
                 <Route path="/nursery" element={<ProtectedRoute><NurseryProvider><NurseryHub /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/search" element={<ProtectedRoute><NurseryProvider><NurserySearch /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/orders" element={<ProtectedRoute><NurseryProvider><NurseryOrders /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/inventory" element={<ProtectedRoute><NurseryProvider><NurseryInventory /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/dashboard" element={<ProtectedRoute><NurseryProvider><NurseryDashboard /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/profile" element={<ProtectedRoute><NurseryProvider><NurseryProfile /></NurseryProvider></ProtectedRoute>} />
                 <Route path="/crop_recommendation" element={<ProtectedRoute><CropRotationRecommendation /></ProtectedRoute>} />
                 <Route path="/crop-identification" element={<ProtectedRoute><Cropidentification /></ProtectedRoute>} />
                 <Route path="/crop_Rotation_AI" element={<ProtectedRoute><CropRotationPlan /></ProtectedRoute>} />
                 <Route path="/code-of-conduct" element={<CodeOfConduct />} />
-
                 <Route path="/prices" element={<Prices />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/aboutus" element={<AboutUs />} />
                 <Route path="/article" element={<Article />} />
                 <Route path="/soiltestingcentres" element={<SoilTestingCentres />} />
-
                 <Route path="/TaskReminder" element={<ProtectedRoute><TaskReminder /></ProtectedRoute>} />
                 <Route path="/GeminiChat" element={<ProtectedRoute><GeminiChat /></ProtectedRoute>} />
                 <Route path="/SugarcaneRecognition" element={<ProtectedRoute><SugarcaneRecognition /></ProtectedRoute>} />
                 <Route path="/PaddyRecognition" element={<ProtectedRoute><PaddyRecognition /></ProtectedRoute>} />
                 <Route path="/DiseaseRecognition" element={<ProtectedRoute><DiseaseRecognition /></ProtectedRoute>} />
                 <Route path="/PlantTaskReminder" element={<ProtectedRoute><PlantTaskReminder /></ProtectedRoute>} />
-
-
                 <Route path="/Climate" element={<ProtectedRoute><Climate /></ProtectedRoute>} />
-
                 <Route path="/MushroomEdibility" element={<MushroomEdibility />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/market" element={<Market />} />
@@ -222,14 +217,10 @@ const MainContent = () => {
                 <Route path="/AgriProducts" element={<AgriProductListing />} />
                 <Route path="/RentCheckoutPage" element={<ProtectedRoute><RentCheckoutPage /></ProtectedRoute>} />
                 <Route path="/RentCart" element={<ProtectedRoute><RentCartPage /></ProtectedRoute>} />
-                
                 <Route path="/RentProductDetails/:productId" element={<RentProductDetails />} />
-
                 <Route path="/RentAdminDashboard" element={<RentAdminDashboard />} />
                 <Route path="/RentUserDashboard" element={<ProtectedRoute><RentUserDashboard /></ProtectedRoute>} />
                 <Route path="/RentSupport" element={<RentSupportPage />} />
-
-                <Route path="*" element={<NotFound />} />
                 {/* AgroShopAI Routes */}
                 <Route path="/pesticides-shop" element={<HomeShop />} />
                 <Route path="/AgroShop" element={<HomeShop />} />
@@ -240,16 +231,13 @@ const MainContent = () => {
                 <Route path="/AgroShop/Wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
                 <Route path="/AgroShop/Profile" element={<ProtectedRoute><ShopProfile /></ProtectedRoute>} />
                 <Route path="/AgroShop/search" element={<SearchResult />} />
-                {/* Footer Links */}
                 <Route path="/AgroShop/cancellation-return" element={<CancelAndReturnPolicy />} />
                 <Route path="/AgroShop/terms-of-use" element={<TermsOfUse />} />
                 <Route path="/AgroShop/privacy-policy" element={<ShopPrivacyPolicy />} />
                 <Route path="/AgroShop/faq" element={<FAQ />} />
                 <Route path="/AgroShop/grievance" element={<GrievanceRedressal />} />
                 <Route path="/discussion" element={<DiscussionForum />} />
-
-
-  
+                <Route path="*" element={<NotFound />} />
               </Routes>
               {checkShop ? <ShopFooter /> : <Footer />}
             </div>

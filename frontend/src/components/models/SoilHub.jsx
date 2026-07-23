@@ -65,7 +65,7 @@ const soilModules = [
     gradient: 'from-green-600 to-green-700',
     lightBg: 'bg-green-50',
     lightText: 'text-green-600',
-    path: '/soil',
+    path: '/soil/quality',
     features: ['Quality classification', 'Fertility scoring', 'Crop suggestions'],
   },
 ];

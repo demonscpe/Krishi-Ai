@@ -1,8 +1,19 @@
-const { Op } = require('sequelize');
-const { sequelize } = require('../../config/db');
-const { pool } = require('../../config/postgres');
+const admin = require('../../config/firebase');
 
-// Helper: Haversine distance in KM
+const db = admin.firestore();
+
+// ============================================================
+// COLLECTION REFERENCES
+// ============================================================
+const NURSERIES_COL = 'nurseries';
+const PLANTS_COL = 'plants';
+const ORDERS_COL = 'orders';
+
+// ============================================================
+// HELPERS
+// ============================================================
+
+/** Haversine distance in KM */
 function haversine(lat1, lng1, lat2, lng2) {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -15,281 +26,470 @@ function haversine(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// Search plants across nearby nurseries
+/** Convert a Firestore snapshot to a plain object with `id` */
+const snapToObj = (snap) => ({ id: snap.id, ...snap.data() });
+
+/** Generate a readable order ID: ORD-YYYYMMDD-XXXXX */
+function generateOrderId() {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
+  return `ORD-${date}-${rand}`;
+}
+
+// ============================================================
+// NURSERY PROFILE
+// ============================================================
+
+/** Create a new nursery profile (registration) */
+exports.registerNursery = async (data) => {
+  const { userId, nurseryName, ownerName, phone, email, latitude, longitude, address, openingTime, closingTime, licenseNumber } = data;
+
+  const docRef = db.collection(NURSERIES_COL).doc(userId);
+  const existing = await docRef.get();
+  if (existing.exists) {
+    throw new Error('Nursery profile already exists for this user');
+  }
+
+  const nursery = {
+    userId,
+    nurseryName,
+    ownerName,
+    phone: phone || '',
+    email: email || '',
+    latitude: latitude ? parseFloat(latitude) : null,
+    longitude: longitude ? parseFloat(longitude) : null,
+    address: address || '',
+    openingTime: openingTime || '',
+    closingTime: closingTime || '',
+    licenseNumber: licenseNumber || '',
+    status: 'pending', // pending → approved → active / rejected
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+  };
+
+  await docRef.set(nursery);
+  return { id: userId, ...nursery, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+};
+
+/** Get nursery profile by userId */
+exports.getProfileByUserId = async (userId) => {
+  const doc = await db.collection(NURSERIES_COL).doc(userId).get();
+  if (!doc.exists) return null;
+  return snapToObj(doc);
+};
+
+/** Update nursery profile */
+exports.updateProfile = async (userId, data) => {
+  const updates = { ...data, updatedAt: admin.firestore.FieldValue.serverTimestamp() };
+  // Remove undefined / null fields
+  Object.keys(updates).forEach((k) => {
+    if (updates[k] === undefined || updates[k] === null) delete updates[k];
+  });
+  await db.collection(NURSERIES_COL).doc(userId).update(updates);
+  const updated = await db.collection(NURSERIES_COL).doc(userId).get();
+  return snapToObj(updated);
+};
+
+// ============================================================
+// PLANTS (inventory)
+// ============================================================
+
+/** Add a plant to a nursery's inventory */
+exports.addPlant = async (data) => {
+  const { nurseryId, plantName, category, price, quantity, imageUrl, description } = data;
+  const docRef = db.collection(PLANTS_COL).doc();
+  const plant = {
+    nurseryId,
+    plantName,
+    category: category || '',
+    price: parseFloat(price) || 0,
+    quantity: parseInt(quantity, 10) || 0,
+    imageUrl: imageUrl || '',
+    description: description || '',
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+  };
+  await docRef.set(plant);
+  return { id: docRef.id, ...plant, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+};
+
+/** Get all plants for a nursery */
+exports.getNurseryPlants = async (nurseryId) => {
+  const snapshot = await db
+    .collection(PLANTS_COL)
+    .where('nurseryId', '==', nurseryId)
+    .orderBy('createdAt', 'desc')
+    .get();
+  return snapshot.docs.map(snapToObj);
+};
+
+/** Update a plant */
+exports.updatePlant = async (plantId, nurseryId, data) => {
+  const docRef = db.collection(PLANTS_COL).doc(plantId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error('Plant not found');
+  if (doc.data().nurseryId !== nurseryId) throw new Error('Not authorized — plant belongs to another nursery');
+
+  const updates = { ...data, updatedAt: admin.firestore.FieldValue.serverTimestamp() };
+  Object.keys(updates).forEach((k) => {
+    if (updates[k] === undefined || updates[k] === null) delete updates[k];
+  });
+  await docRef.update(updates);
+  const updated = await docRef.get();
+  return snapToObj(updated);
+};
+
+/** Delete a plant */
+exports.deletePlant = async (plantId, nurseryId) => {
+  const docRef = db.collection(PLANTS_COL).doc(plantId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error('Plant not found');
+  if (doc.data().nurseryId !== nurseryId) throw new Error('Not authorized — plant belongs to another nursery');
+  await docRef.delete();
+  return { message: 'Plant deleted' };
+};
+
+// ============================================================
+// SEARCH
+// ============================================================
+
+/** Search plants across all active nurseries */
 exports.searchPlants = async ({ query, lat, lng }) => {
-  const searchPattern = query ? `%${query}%` : '%';
+  // Fetch all active nurseries
+  const nurseriesSnap = await db
+    .collection(NURSERIES_COL)
+    .where('status', '==', 'active')
+    .get();
 
-  const result = await pool.query(
-    `
-    SELECT 
-      p.id AS plant_id,
-      p.plant_name,
-      p.category,
-      p.price,
-      p.quantity,
-      p.description,
-      p.image_url,
-      n.id AS nursery_id,
-      n.nursery_name,
-      n.owner_name,
-      n.phone,
-      n.email,
-      n.address,
-      n.latitude,
-      n.longitude,
-      n.opening_time,
-      n.closing_time,
-      n.status
-    FROM plants p
-    JOIN nurseries n ON n.id = p.nursery_id
-    WHERE n.status = 'active'
-      AND p.quantity > 0
-      AND (p.plant_name ILIKE $1 OR p.category ILIKE $1)
-    ORDER BY n.nursery_name ASC
-    `,
-    [searchPattern]
-  );
+  if (nurseriesSnap.empty) return [];
 
-  let rows = result.rows;
+  const activeNurseryIds = new Set();
+  const nurseryMap = {};
+  nurseriesSnap.docs.forEach((doc) => {
+    const data = doc.data();
+    activeNurseryIds.add(doc.id);
+    nurseryMap[doc.id] = data;
+  });
 
-  // Compute distance if lat/lng provided
-  if (lat && lng) {
-    rows = rows.map((row) => ({
-      ...row,
-      distance_km: haversine(
+  // Build the plant query
+  let plantsQuery = db.collection(PLANTS_COL).where('quantity', '>', 0);
+
+  if (query && query.trim()) {
+    // Firestore doesn't support ILIKE natively, so we fetch & filter in-memory
+    // For large datasets, consider Algolia/MeiliSearch. For now, fetch and filter.
+  }
+
+  const plantsSnap = await plantsQuery.get();
+  let results = [];
+
+  plantsSnap.docs.forEach((doc) => {
+    const plant = snapToObj(doc);
+    // Filter by nursery active
+    if (!activeNurseryIds.has(plant.nurseryId)) return;
+    // Filter by query (case-insensitive in-memory)
+    if (query && query.trim()) {
+      const q = query.toLowerCase();
+      const nameMatch = plant.plantName?.toLowerCase().includes(q);
+      const catMatch = plant.category?.toLowerCase().includes(q);
+      if (!nameMatch && !catMatch) return;
+    }
+
+    const nursery = nurseryMap[plant.nurseryId];
+    const row = {
+      plantId: plant.id,
+      plantName: plant.plantName,
+      category: plant.category,
+      price: plant.price,
+      quantity: plant.quantity,
+      description: plant.description,
+      imageUrl: plant.imageUrl,
+      nurseryId: plant.nurseryId,
+      nurseryName: nursery?.nurseryName || '',
+      ownerName: nursery?.ownerName || '',
+      phone: nursery?.phone || '',
+      email: nursery?.email || '',
+      address: nursery?.address || '',
+      latitude: nursery?.latitude || null,
+      longitude: nursery?.longitude || null,
+      openingTime: nursery?.openingTime || '',
+      closingTime: nursery?.closingTime || '',
+      status: nursery?.status || '',
+    };
+
+    // Compute distance if lat/lng provided
+    if (lat && lng && row.latitude && row.longitude) {
+      row.distance_km = haversine(
         parseFloat(lat),
         parseFloat(lng),
         parseFloat(row.latitude),
         parseFloat(row.longitude)
-      ),
-    }));
-    rows.sort((a, b) => a.distance_km - b.distance_km);
-  } else {
-    rows = rows.map((row) => ({ ...row, distance_km: null }));
+      );
+    } else {
+      row.distance_km = null;
+    }
+
+    results.push(row);
+  });
+
+  // Sort by distance if available
+  if (lat && lng) {
+    results.sort((a, b) => (a.distance_km || 99999) - (b.distance_km || 99999));
   }
 
-  return rows;
+  return results;
 };
 
-// Get single nursery detail
+/** Get a single nursery detail with its plants */
 exports.getNurseryDetail = async (nurseryId) => {
-  const result = await pool.query(
-    `SELECT * FROM nurseries WHERE id = $1`,
-    [nurseryId]
-  );
-  return result.rows[0] || null;
+  const doc = await db.collection(NURSERIES_COL).doc(nurseryId).get();
+  if (!doc.exists) return null;
+  const nursery = snapToObj(doc);
+  const plants = await exports.getNurseryPlants(nurseryId);
+  return { ...nursery, plants };
 };
 
-// Get plants for a specific nursery
-exports.getNurseryPlants = async (nurseryId) => {
-  const result = await pool.query(
-    `SELECT * FROM plants WHERE nursery_id = $1 AND quantity > 0 ORDER BY plant_name ASC`,
-    [nurseryId]
-  );
-  return result.rows;
-};
+// ============================================================
+// ORDERS
+// ============================================================
 
-// Create an order (transactional)
-exports.createOrder = async ({ farmer_id, nursery_id, items, fulfillment_type }) => {
-  const client = await pool.connect();
+/** Create a new order (with stock validation & decrement) */
+exports.createOrder = async ({ farmerId, nurseryId, items, fulfillmentType }) => {
+  // Use Firestore runTransaction for atomicity
+  const orderRef = db.collection(ORDERS_COL).doc();
 
-  try {
-    await client.query('BEGIN');
-
+  await db.runTransaction(async (transaction) => {
     let total = 0;
 
-    // Validate and calculate total
     for (const item of items) {
-      const plantRes = await client.query(
-        `SELECT id, price, quantity FROM plants WHERE id = $1 AND nursery_id = $2 FOR UPDATE`,
-        [item.plant_id, nursery_id]
-      );
+      const plantRef = db.collection(PLANTS_COL).doc(item.plantId);
+      const plantDoc = await transaction.get(plantRef);
 
-      if (plantRes.rows.length === 0) {
-        throw new Error(`Plant ${item.plant_id} not found in this nursery`);
+      if (!plantDoc.exists) {
+        throw new Error(`Plant ${item.plantId} not found`);
       }
 
-      const plant = plantRes.rows[0];
+      const plant = plantDoc.data();
+
+      if (plant.nurseryId !== nurseryId) {
+        throw new Error(`Plant ${item.plantId} does not belong to this nursery`);
+      }
+
       if (plant.quantity < item.quantity) {
-        throw new Error(`Insufficient stock for plant ${item.plant_id}. Available: ${plant.quantity}`);
+        throw new Error(`Insufficient stock for ${plant.plantName}. Available: ${plant.quantity}`);
       }
 
       total += parseFloat(plant.price) * item.quantity;
+
+      // Decrement stock
+      transaction.update(plantRef, { quantity: plant.quantity - item.quantity });
     }
 
-    // Create order
-    const orderRes = await client.query(
-      `INSERT INTO orders (farmer_id, nursery_id, total, status, fulfillment_type)
-       VALUES ($1, $2, $3, 'pending', $4)
-       RETURNING *`,
-      [farmer_id, nursery_id, total, fulfillment_type || 'pickup']
-    );
+    // Create order with embedded items
+    const order = {
+      orderId: generateOrderId(),
+      farmerId,
+      nurseryId,
+      total,
+      status: 'pending',
+      fulfillmentType: fulfillmentType || 'pickup',
+      items: items.map((item) => ({
+        plantId: item.plantId,
+        quantity: item.quantity,
+      })),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
 
-    const order = orderRes.rows[0];
+    transaction.set(orderRef, order);
+  });
 
-    // Create order items & decrement stock
-    for (const item of items) {
-      await client.query(
-        `INSERT INTO order_items (order_id, plant_id, price, quantity)
-         VALUES ($1, $2, (SELECT price FROM plants WHERE id = $2), $3)`,
-        [order.id, item.plant_id, item.quantity]
-      );
+  // Fetch and return the full order with plant names populated
+  const orderSnap = await orderRef.get();
+  const order = snapToObj(orderSnap);
 
-      await client.query(
-        `UPDATE plants SET quantity = quantity - $1 WHERE id = $2`,
-        [item.quantity, item.plant_id]
-      );
-    }
-
-    await client.query('COMMIT');
-
-    // Fetch the full order with items
-    const fullOrder = await pool.query(
-      `SELECT o.*, json_agg(json_build_object(
-        'plant_id', oi.plant_id,
-        'plant_name', p.plant_name,
-        'price', oi.price,
-        'quantity', oi.quantity
-      )) AS items
-      FROM orders o
-      JOIN order_items oi ON oi.order_id = o.id
-      JOIN plants p ON p.id = oi.plant_id
-      WHERE o.id = $1
-      GROUP BY o.id`,
-      [order.id]
-    );
-
-    return fullOrder.rows[0];
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;
-  } finally {
-    client.release();
+  // Populate plant names
+  const populatedItems = [];
+  for (const item of order.items || []) {
+    const plantDoc = await db.collection(PLANTS_COL).doc(item.plantId).get();
+    const plant = plantDoc.data();
+    populatedItems.push({
+      plantId: item.plantId,
+      plantName: plant?.plantName || 'Unknown',
+      price: plant?.price || 0,
+      quantity: item.quantity,
+    });
   }
+  order.items = populatedItems;
+
+  return order;
 };
 
-// Get farmer's orders
+/** Get farmer's orders */
 exports.getFarmerOrders = async (farmerId) => {
-  const result = await pool.query(
-    `SELECT o.*, n.nursery_name,
-      json_agg(json_build_object(
-        'plant_id', oi.plant_id,
-        'plant_name', p.plant_name,
-        'price', oi.price,
-        'quantity', oi.quantity
-      )) AS items
-    FROM orders o
-    JOIN nurseries n ON n.id = o.nursery_id
-    JOIN order_items oi ON oi.order_id = o.id
-    JOIN plants p ON p.id = oi.plant_id
-    WHERE o.farmer_id = $1
-    GROUP BY o.id, n.nursery_name
-    ORDER BY o.created_at DESC`,
-    [farmerId]
-  );
-  return result.rows;
+  const snapshot = await db
+    .collection(ORDERS_COL)
+    .where('farmerId', '==', farmerId)
+    .orderBy('createdAt', 'desc')
+    .get();
+
+  const orders = [];
+  for (const doc of snapshot.docs) {
+    const order = snapToObj(doc);
+    // Populate nursery name
+    const nurseryDoc = await db.collection(NURSERIES_COL).doc(order.nurseryId).get();
+    const nursery = nurseryDoc.data();
+    order.nurseryName = nursery?.nurseryName || 'Unknown';
+
+    // Populate item details
+    const populatedItems = [];
+    for (const item of order.items || []) {
+      const plantDoc = await db.collection(PLANTS_COL).doc(item.plantId).get();
+      const plant = plantDoc.data();
+      populatedItems.push({
+        plantId: item.plantId,
+        plantName: plant?.plantName || 'Unknown',
+        price: plant?.price || 0,
+        quantity: item.quantity,
+      });
+    }
+    order.items = populatedItems;
+    orders.push(order);
+  }
+
+  return orders;
 };
 
-// Get nursery's incoming orders
+/** Get nursery's incoming orders */
 exports.getNurseryOrders = async (nurseryId) => {
-  const result = await pool.query(
-    `SELECT o.*, u.name AS farmer_name, u.email AS farmer_email,
-      json_agg(json_build_object(
-        'plant_id', oi.plant_id,
-        'plant_name', p.plant_name,
-        'price', oi.price,
-        'quantity', oi.quantity
-      )) AS items
-    FROM orders o
-    JOIN users u ON u.id = o.farmer_id
-    JOIN order_items oi ON oi.order_id = o.id
-    JOIN plants p ON p.id = oi.plant_id
-    WHERE o.nursery_id = $1
-    GROUP BY o.id, u.name, u.email
-    ORDER BY o.created_at DESC`,
-    [nurseryId]
-  );
-  return result.rows;
-};
+  const snapshot = await db
+    .collection(ORDERS_COL)
+    .where('nurseryId', '==', nurseryId)
+    .orderBy('createdAt', 'desc')
+    .get();
 
-// Update order status
-exports.updateOrderStatus = async (orderId, nurseryId, status) => {
-  const client = await pool.connect();
+  const orders = [];
+  for (const doc of snapshot.docs) {
+    const order = snapToObj(doc);
 
-  try {
-    await client.query('BEGIN');
-
-    const orderRes = await client.query(
-      `SELECT * FROM orders WHERE id = $1 AND nursery_id = $2 FOR UPDATE`,
-      [orderId, nurseryId]
-    );
-
-    if (orderRes.rows.length === 0) {
-      throw new Error('Order not found or not associated with this nursery');
+    // Get farmer info from Firebase Auth
+    let farmerName = 'Unknown';
+    let farmerEmail = '';
+    try {
+      const userRecord = await admin.auth().getUser(order.farmerId);
+      farmerName = userRecord.displayName || userRecord.email || 'Unknown';
+      farmerEmail = userRecord.email || '';
+    } catch {
+      // farmer not found in auth — that's ok
     }
 
-    const order = orderRes.rows[0];
+    order.farmerName = farmerName;
+    order.farmerEmail = farmerEmail;
 
-    // If rejected/cancelled, restore stock
-    if ((status === 'cancelled' || status === 'rejected') && order.status === 'pending') {
-      const itemsRes = await client.query(
-        `SELECT * FROM order_items WHERE order_id = $1`,
-        [orderId]
-      );
+    // Populate item details
+    const populatedItems = [];
+    for (const item of order.items || []) {
+      const plantDoc = await db.collection(PLANTS_COL).doc(item.plantId).get();
+      const plant = plantDoc.data();
+      populatedItems.push({
+        plantId: item.plantId,
+        plantName: plant?.plantName || 'Unknown',
+        price: plant?.price || 0,
+        quantity: item.quantity,
+      });
+    }
+    order.items = populatedItems;
+    orders.push(order);
+  }
 
-      for (const item of itemsRes.rows) {
-        await client.query(
-          `UPDATE plants SET quantity = quantity + $1 WHERE id = $2`,
-          [item.quantity, item.plant_id]
-        );
+  return orders;
+};
+
+/** Update order status (with stock restore on cancel/reject) */
+exports.updateOrderStatus = async (orderId, nurseryId, status) => {
+  const orderRef = db.collection(ORDERS_COL).doc(orderId);
+
+  await db.runTransaction(async (transaction) => {
+    const orderDoc = await transaction.get(orderRef);
+    if (!orderDoc.exists) throw new Error('Order not found');
+    const order = orderDoc.data();
+
+    if (order.nurseryId !== nurseryId) {
+      throw new Error('Order not associated with this nursery');
+    }
+
+    // If cancelling/rejecting a pending order, restore stock
+    if (
+      (status === 'cancelled' || status === 'rejected') &&
+      order.status === 'pending'
+    ) {
+      for (const item of order.items || []) {
+        const plantRef = db.collection(PLANTS_COL).doc(item.plantId);
+        const plantDoc = await transaction.get(plantRef);
+        if (plantDoc.exists) {
+          const plant = plantDoc.data();
+          transaction.update(plantRef, {
+            quantity: (plant.quantity || 0) + item.quantity,
+          });
+        }
       }
     }
 
-    const updateRes = await client.query(
-      `UPDATE orders SET status = $1 WHERE id = $2 RETURNING *`,
-      [status, orderId]
-    );
+    transaction.update(orderRef, {
+      status,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+  });
 
-    await client.query('COMMIT');
-    return updateRes.rows[0];
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;
-  } finally {
-    client.release();
-  }
+  const updated = await orderRef.get();
+  return snapToObj(updated);
 };
 
-// Get nursery dashboard summary
-exports.getDashboardSummary = async (nurseryId) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+// ============================================================
+// DASHBOARD
+// ============================================================
 
-  const [ordersResult, plantsResult, todayOrders] = await Promise.all([
-    pool.query(
-      `SELECT 
-        COUNT(*) FILTER (WHERE status = 'pending') AS pending_count,
-        COUNT(*) FILTER (WHERE status = 'completed') AS completed_count,
-        COALESCE(SUM(total) FILTER (WHERE status = 'completed'), 0) AS revenue_total
-      FROM orders WHERE nursery_id = $1`,
-      [nurseryId]
-    ),
-    pool.query(
-      `SELECT COUNT(*) AS count FROM plants WHERE nursery_id = $1`,
-      [nurseryId]
-    ),
-    pool.query(
-      `SELECT COUNT(*) AS count FROM orders WHERE nursery_id = $1 AND created_at >= $2`,
-      [nurseryId, today]
-    ),
-  ]);
+/** Get nursery dashboard summary */
+exports.getDashboardSummary = async (nurseryId) => {
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const ordersSnap = await db
+    .collection(ORDERS_COL)
+    .where('nurseryId', '==', nurseryId)
+    .get();
+
+  const plantsSnap = await db
+    .collection(PLANTS_COL)
+    .where('nurseryId', '==', nurseryId)
+    .get();
+
+  let pendingCount = 0;
+  let completedCount = 0;
+  let revenueTotal = 0;
+  let todaysOrdersCount = 0;
+
+  ordersSnap.docs.forEach((doc) => {
+    const order = doc.data();
+    if (order.status === 'pending') pendingCount++;
+    if (order.status === 'completed') {
+      completedCount++;
+      revenueTotal += parseFloat(order.total) || 0;
+    }
+    // Check if created today
+    if (order.createdAt) {
+      const orderDate = order.createdAt.toDate ? order.createdAt.toDate() : new Date(order.createdAt);
+      if (orderDate >= todayStart) {
+        todaysOrdersCount++;
+      }
+    }
+  });
 
   return {
-    todays_orders_count: parseInt(todayOrders.rows[0].count),
-    pending_count: parseInt(ordersResult.rows[0].pending_count),
-    completed_count: parseInt(ordersResult.rows[0].completed_count),
-    plants_available_count: parseInt(plantsResult.rows[0].count),
-    revenue_total: parseFloat(ordersResult.rows[0].revenue_total),
+    todays_orders_count: todaysOrdersCount,
+    pending_count: pendingCount,
+    completed_count: completedCount,
+    plants_available_count: plantsSnap.size,
+    revenue_total: revenueTotal,
   };
 };
 

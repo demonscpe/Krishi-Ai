@@ -1,24 +1,28 @@
-# Task: Fix .gitignore + Replace "agrotech" → "krishi" + Remove Render references
+# Fix Plan - Soil, Disease, Nursery, Mobile Responsive & Dropdowns
 
-## Steps to Complete
+## Step 1: Fix Navbar.jsx
+- [x] Unify `dropdowns` and `dropdownsEnd` into single `allDropdowns` array
+- [x] Include Disease and Nursery as dropdowns in the unified array
+- [x] Remove duplicate standalone Disease & Nursery entries from mobile menu
+- [x] Fix inconsistent menu ordering (desktop vs mobile)
 
-### Phase 1: Fix .gitignore & .gitattributes
-- [x] Step 1: Fix root `Krishii-AI/.gitignore` — remove duplicates, add missing patterns
-- [x] Step 2: Create `Krishii-AI/.gitattributes` — fix CRLF line ending warnings
-- [x] Step 3: Fix `api/.gitignore` — remove wrong venv paths
-- [x] Step 4: Fix `disease-prediction-api/.gitignore` — remove hardcoded venv paths
+## Step 2: Fix MainContent.jsx
+- [x] Add missing routes for nursery sub-pages (`/nursery/search`, `/nursery/orders`, etc.)
+- [x] Add missing route for `/disease/report`
+- [x] Fix `/soil/quality` path routing
+- [x] Add placeholder components for nursery sub-pages
 
-### Phase 2: Rebrand "agrotech" → "krishi" in file contents
-- [x] Step 5: Update `api/app.py` — premade requests + system prompt (AgroTech AI → Krishi AI, agro-tech-ai.vercel.app → krishi-ai.vercel.app)
-- [x] Step 6: Update `krishi-ai-chatbot/src/main.py` — already uses Krishi-Ai naming
-- [ ] Step 7: Rename folders (`agrotech-ai-apis/`, `agrotech-ai-chatbot/`, `agrotech-api's/`) — **WARNING: Will break imports if not done carefully**
+## Step 3: Create Missing Components
+- [x] NurserySearch.jsx (placeholder)
+- [x] NurseryOrders.jsx (placeholder)
+- [x] NurseryInventory.jsx (placeholder)
+- [x] NurseryDashboard.jsx (placeholder)
+- [x] NurseryProfile.jsx (placeholder)
+- [x] DiseaseReport.jsx (placeholder)
 
-### Phase 3: Backend Firebase Auth Integration
-- [x] Step 8: Create `backend/config/firebase.js` — Firebase Admin SDK init
-- [x] Step 9: Update `backend/middleware/auth.middleware.js` — Firebase token verification
-- [x] Step 10: Update `backend/config/env.js` — graceful env var fallback + Firebase vars
-- [x] Step 11: Add `firebase-admin` to `backend/package.json` + npm install
+## Step 4: Mobile Responsiveness
+- [x] Add responsive padding/grid fixes to SoilHub, DiseaseHub, NurseryHub
+- [x] Fix hero section spacing on small screens
 
-### Phase 4: Git apply
-- [ ] Step 12: Run `git add`, commit, and push all changes
-
+## Step 5: Soil Quality Path Fix
+- [x] Add proper `/soil/quality` route pointing to SoilQuality component

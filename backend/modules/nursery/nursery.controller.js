@@ -1,80 +1,84 @@
 const nurseryService = require('./nursery.service');
-const { pool } = require('../../config/postgres');
 
+// ============================================================
 // POST /api/nursery/register — Register a nursery
+// ============================================================
 exports.registerNursery = async (req, res) => {
   try {
     const {
       nursery_name, owner_name, phone, email,
       latitude, longitude, address,
-      opening_time, closing_time, license_number
+      opening_time, closing_time, license_number,
     } = req.body;
 
-    const result = await pool.query(
-      `INSERT INTO nurseries (user_id, nursery_name, owner_name, phone, email, latitude, longitude, address, opening_time, closing_time, license_number, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'pending')
-       RETURNING *`,
-      [req.user.id, nursery_name, owner_name, phone, email, latitude, longitude, address, opening_time, closing_time, license_number]
-    );
+    const nursery = await nurseryService.registerNursery({
+      userId: req.user.uid,
+      nurseryName: nursery_name,
+      ownerName: owner_name,
+      phone,
+      email,
+      latitude,
+      longitude,
+      address,
+      openingTime: opening_time,
+      closingTime: closing_time,
+      licenseNumber: license_number,
+    });
 
-    res.status(201).json({ message: 'Nursery registered successfully', nursery: result.rows[0] });
+    res.status(201).json({ message: 'Nursery registered successfully', nursery });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // GET /api/nursery/profile
+// ============================================================
 exports.getProfile = async (req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT * FROM nurseries WHERE user_id = $1`,
-      [req.user.id]
-    );
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Nursery profile not found' });
+    const profile = await nurseryService.getProfileByUserId(req.user.uid);
+    if (!profile) {
+      return res.status(404).json({ message: 'Nursery profile not found. Please register first.' });
     }
-    res.json(result.rows[0]);
+    res.json(profile);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // PUT /api/nursery/profile
+// ============================================================
 exports.updateProfile = async (req, res) => {
   try {
     const {
       nursery_name, owner_name, phone, email,
       latitude, longitude, address,
-      opening_time, closing_time, license_number
+      opening_time, closing_time, license_number,
     } = req.body;
 
-    const result = await pool.query(
-      `UPDATE nurseries SET 
-        nursery_name = COALESCE($1, nursery_name),
-        owner_name = COALESCE($2, owner_name),
-        phone = COALESCE($3, phone),
-        email = COALESCE($4, email),
-        latitude = COALESCE($5, latitude),
-        longitude = COALESCE($6, longitude),
-        address = COALESCE($7, address),
-        opening_time = COALESCE($8, opening_time),
-        closing_time = COALESCE($9, closing_time),
-        license_number = COALESCE($10, license_number)
-      WHERE user_id = $11
-      RETURNING *`,
-      [nursery_name, owner_name, phone, email, latitude, longitude, address, opening_time, closing_time, license_number, req.user.id]
-    );
+    const data = {};
+    if (nursery_name !== undefined) data.nurseryName = nursery_name;
+    if (owner_name !== undefined) data.ownerName = owner_name;
+    if (phone !== undefined) data.phone = phone;
+    if (email !== undefined) data.email = email;
+    if (latitude !== undefined) data.latitude = parseFloat(latitude);
+    if (longitude !== undefined) data.longitude = parseFloat(longitude);
+    if (address !== undefined) data.address = address;
+    if (opening_time !== undefined) data.openingTime = opening_time;
+    if (closing_time !== undefined) data.closingTime = closing_time;
+    if (license_number !== undefined) data.licenseNumber = license_number;
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Nursery profile not found' });
-    }
-    res.json({ message: 'Profile updated', nursery: result.rows[0] });
+    const updated = await nurseryService.updateProfile(req.user.uid, data);
+    res.json({ message: 'Profile updated', nursery: updated });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // GET /api/nursery/plants/search?query=&lat=&lng=
+// ============================================================
 exports.searchPlants = async (req, res) => {
   try {
     const { query, lat, lng } = req.query;
@@ -85,113 +89,123 @@ exports.searchPlants = async (req, res) => {
   }
 };
 
-// GET /api/nursery/plants — nursery's own plants
+// ============================================================
+// GET /api/nursery/plants — nursery's own plants (inventory)
+// ============================================================
 exports.getMyPlants = async (req, res) => {
   try {
-    // Get nursery id from user_id
-    const nurseryRes = await pool.query(`SELECT id FROM nurseries WHERE user_id = $1`, [req.user.id]);
-    if (nurseryRes.rows.length === 0) return res.status(404).json({ message: 'Nursery not found' });
+    const profile = await nurseryService.getProfileByUserId(req.user.uid);
+    if (!profile) return res.status(404).json({ message: 'Nursery not found. Please register first.' });
 
-    const result = await pool.query(
-      `SELECT * FROM plants WHERE nursery_id = $1 ORDER BY created_at DESC`,
-      [nurseryRes.rows[0].id]
-    );
-    res.json(result.rows);
+    const plants = await nurseryService.getNurseryPlants(profile.id);
+    res.json(plants);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // POST /api/nursery/plants — add a plant
+// ============================================================
 exports.addPlant = async (req, res) => {
   try {
-    const nurseryRes = await pool.query(`SELECT id FROM nurseries WHERE user_id = $1`, [req.user.id]);
-    if (nurseryRes.rows.length === 0) return res.status(404).json({ message: 'Nursery not found' });
+    const profile = await nurseryService.getProfileByUserId(req.user.uid);
+    if (!profile) return res.status(404).json({ message: 'Nursery not found. Please register first.' });
 
     const { plant_name, category, price, quantity, image_url, description } = req.body;
-    const result = await pool.query(
-      `INSERT INTO plants (nursery_id, plant_name, category, price, quantity, image_url, description)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [nurseryRes.rows[0].id, plant_name, category, price, quantity, image_url, description]
-    );
-    res.status(201).json(result.rows[0]);
+    const plant = await nurseryService.addPlant({
+      nurseryId: profile.id,
+      plantName: plant_name,
+      category,
+      price,
+      quantity,
+      imageUrl: image_url,
+      description,
+    });
+
+    res.status(201).json(plant);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // PUT /api/nursery/plants/:id
+// ============================================================
 exports.updatePlant = async (req, res) => {
   try {
-    const nurseryRes = await pool.query(`SELECT id FROM nurseries WHERE user_id = $1`, [req.user.id]);
-    if (nurseryRes.rows.length === 0) return res.status(404).json({ message: 'Nursery not found' });
+    const profile = await nurseryService.getProfileByUserId(req.user.uid);
+    if (!profile) return res.status(404).json({ message: 'Nursery not found' });
 
     const { plant_name, category, price, quantity, image_url, description } = req.body;
-    const result = await pool.query(
-      `UPDATE plants SET
-        plant_name = COALESCE($1, plant_name),
-        category = COALESCE($2, category),
-        price = COALESCE($3, price),
-        quantity = COALESCE($4, quantity),
-        image_url = COALESCE($5, image_url),
-        description = COALESCE($6, description)
-      WHERE id = $7 AND nursery_id = $8
-      RETURNING *`,
-      [plant_name, category, price, quantity, image_url, description, req.params.id, nurseryRes.rows[0].id]
-    );
+    const data = {};
+    if (plant_name !== undefined) data.plantName = plant_name;
+    if (category !== undefined) data.category = category;
+    if (price !== undefined) data.price = parseFloat(price);
+    if (quantity !== undefined) data.quantity = parseInt(quantity, 10);
+    if (image_url !== undefined) data.imageUrl = image_url;
+    if (description !== undefined) data.description = description;
 
-    if (result.rows.length === 0) return res.status(404).json({ message: 'Plant not found or not yours' });
-    res.json(result.rows[0]);
+    const updated = await nurseryService.updatePlant(req.params.id, profile.id, data);
+    res.json(updated);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // DELETE /api/nursery/plants/:id
+// ============================================================
 exports.deletePlant = async (req, res) => {
   try {
-    const nurseryRes = await pool.query(`SELECT id FROM nurseries WHERE user_id = $1`, [req.user.id]);
-    if (nurseryRes.rows.length === 0) return res.status(404).json({ message: 'Nursery not found' });
+    const profile = await nurseryService.getProfileByUserId(req.user.uid);
+    if (!profile) return res.status(404).json({ message: 'Nursery not found' });
 
-    const result = await pool.query(
-      `DELETE FROM plants WHERE id = $1 AND nursery_id = $2 RETURNING *`,
-      [req.params.id, nurseryRes.rows[0].id]
-    );
-    if (result.rows.length === 0) return res.status(404).json({ message: 'Plant not found or not yours' });
+    await nurseryService.deletePlant(req.params.id, profile.id);
     res.json({ message: 'Plant deleted' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // POST /api/nursery/orders — create order (farmer)
+// ============================================================
 exports.createOrder = async (req, res) => {
   try {
     const { nursery_id, items, fulfillment_type } = req.body;
+
+    if (!nursery_id || !items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: 'nursery_id and items (array) are required' });
+    }
+
     const order = await nurseryService.createOrder({
-      farmer_id: req.user.id,
-      nursery_id,
+      farmerId: req.user.uid,
+      nurseryId: nursery_id,
       items,
-      fulfillment_type,
+      fulfillmentType: fulfillment_type || 'pickup',
     });
+
     res.status(201).json(order);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // GET /api/nursery/orders — farmer's orders or nursery's incoming orders
+// ============================================================
 exports.getOrders = async (req, res) => {
   try {
     const { role } = req.user;
     let orders;
 
     if (role === 'farmer') {
-      orders = await nurseryService.getFarmerOrders(req.user.id);
+      orders = await nurseryService.getFarmerOrders(req.user.uid);
     } else if (role === 'nursery') {
-      const nurseryRes = await pool.query(`SELECT id FROM nurseries WHERE user_id = $1`, [req.user.id]);
-      if (nurseryRes.rows.length === 0) return res.status(404).json({ message: 'Nursery not found' });
-      orders = await nurseryService.getNurseryOrders(nurseryRes.rows[0].id);
+      const profile = await nurseryService.getProfileByUserId(req.user.uid);
+      if (!profile) return res.status(404).json({ message: 'Nursery not found' });
+      orders = await nurseryService.getNurseryOrders(profile.id);
     } else {
       return res.status(403).json({ message: 'Access denied' });
     }
@@ -202,11 +216,13 @@ exports.getOrders = async (req, res) => {
   }
 };
 
+// ============================================================
 // PUT /api/nursery/orders/:id — update order status (nursery)
+// ============================================================
 exports.updateOrderStatus = async (req, res) => {
   try {
-    const nurseryRes = await pool.query(`SELECT id FROM nurseries WHERE user_id = $1`, [req.user.id]);
-    if (nurseryRes.rows.length === 0) return res.status(404).json({ message: 'Nursery not found' });
+    const profile = await nurseryService.getProfileByUserId(req.user.uid);
+    if (!profile) return res.status(404).json({ message: 'Nursery not found' });
 
     const { status } = req.body;
     const validStatuses = ['accepted', 'completed', 'cancelled', 'rejected'];
@@ -214,34 +230,37 @@ exports.updateOrderStatus = async (req, res) => {
       return res.status(400).json({ message: `Invalid status. Must be one of: ${validStatuses.join(', ')}` });
     }
 
-    const order = await nurseryService.updateOrderStatus(req.params.id, nurseryRes.rows[0].id, status);
+    const order = await nurseryService.updateOrderStatus(req.params.id, profile.id, status);
     res.json(order);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // GET /api/nursery/dashboard-summary
+// ============================================================
 exports.getDashboardSummary = async (req, res) => {
   try {
-    const nurseryRes = await pool.query(`SELECT id FROM nurseries WHERE user_id = $1`, [req.user.id]);
-    if (nurseryRes.rows.length === 0) return res.status(404).json({ message: 'Nursery not found' });
+    const profile = await nurseryService.getProfileByUserId(req.user.uid);
+    if (!profile) return res.status(404).json({ message: 'Nursery not found' });
 
-    const summary = await nurseryService.getDashboardSummary(nurseryRes.rows[0].id);
+    const summary = await nurseryService.getDashboardSummary(profile.id);
     res.json(summary);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// ============================================================
 // GET /api/nursery/detail/:id — public nursery detail for farmers
+// ============================================================
 exports.getNurseryDetail = async (req, res) => {
   try {
     const nursery = await nurseryService.getNurseryDetail(req.params.id);
     if (!nursery) return res.status(404).json({ message: 'Nursery not found' });
 
-    const plants = await nurseryService.getNurseryPlants(req.params.id);
-    res.json({ ...nursery, plants });
+    res.json(nursery);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
