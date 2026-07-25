@@ -19,6 +19,7 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 # API Keys
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 
 # Server
 HOST = os.getenv("HOST", "0.0.0.0")

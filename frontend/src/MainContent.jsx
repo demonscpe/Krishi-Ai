@@ -24,7 +24,10 @@ import Contributor from './pages/ContributorsPage';
 import UseScrollToTop from './components/UseScrollToTop';
 import Article from './pages/Article';
 import TaskReminder from './components/tools/TaskReminder';
-import ChatBot from './pages/ChatBot';
+import NPKCalculator from './components/tools/NPKCalculator';
+import GovtSchemes from './components/tools/GovtSchemes';
+import FarmerBenefits from './components/tools/FarmerBenefits';
+// RAG Chatbot is now handled by the floating AiChatbot widget (imported below)
 import CropRotationRecommendation from './components/models/CropRotationRecommendation';
 import DiseaseRecognition from './pages/Disease/DiseaseRecognition';
 import SugarcaneRecognition from './pages/Disease/SugarcaneRecognition';
@@ -148,7 +151,6 @@ const MainContent = () => {
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/licensing" element={<Licensing />} />
                 <Route path="/" element={<Home />} />
-                <Route path="/chatbot" element={<ProtectedRoute><ChatBot /></ProtectedRoute>} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/contributor" element={<Contributor />} />
                 <Route path="/about" element={<About />} />
@@ -195,7 +197,10 @@ const MainContent = () => {
                 <Route path="/SugarcaneRecognition" element={<ProtectedRoute><SugarcaneRecognition /></ProtectedRoute>} />
                 <Route path="/PaddyRecognition" element={<ProtectedRoute><PaddyRecognition /></ProtectedRoute>} />
                 <Route path="/DiseaseRecognition" element={<ProtectedRoute><DiseaseRecognition /></ProtectedRoute>} />
-                <Route path="/PlantTaskReminder" element={<ProtectedRoute><PlantTaskReminder /></ProtectedRoute>} />
+<Route path="/PlantTaskReminder" element={<ProtectedRoute><PlantTaskReminder /></ProtectedRoute>} />
+                <Route path="/npk-calculator" element={<ProtectedRoute><NPKCalculator /></ProtectedRoute>} />
+                <Route path="/govt-schemes" element={<ProtectedRoute><GovtSchemes /></ProtectedRoute>} />
+                <Route path="/farmer-benefits" element={<ProtectedRoute><FarmerBenefits /></ProtectedRoute>} />
                 <Route path="/Climate" element={<ProtectedRoute><Climate /></ProtectedRoute>} />
                 <Route path="/MushroomEdibility" element={<MushroomEdibility />} />
                 <Route path="/products" element={<Products />} />

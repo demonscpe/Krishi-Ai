@@ -1,216 +1,52 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Bell, Calendar, Clock, CheckCircle2, Trash2, Plus, ArrowLeft, Sparkles, Leaf, Droplets, Scissors, RefreshCw, AlertCircle } from 'lucide-react';
+import bgHero from "../../assets/bgHero.png";
 
 const CAT_CONFIG = {
-  water:     { label: 'Water',     icon: '💧', color: '#4EA8DE', bg: '#EAF4FD', dark: '#1A6FA3' },
-  fertilize: { label: 'Fertilize', icon: '🌿', color: '#52B788', bg: '#E8F5EE', dark: '#1E6E45' },
-  prune:     { label: 'Prune',     icon: '✂️', color: '#E76F51', bg: '#FDF0EC', dark: '#A83E22' },
-  repot:     { label: 'Repot',     icon: '🪴', color: '#C77DFF', bg: '#F5EEFF', dark: '#7B2FBE' },
-  other:     { label: 'Other',     icon: '📋', color: '#9BA2AE', bg: '#F2F3F5', dark: '#555E6B' },
+  water:     { label: 'Watering', icon: Droplets, color: 'bg-blue-500', lightBg: 'bg-blue-50', lightText: 'text-blue-600' },
+  fertilize: { label: 'Fertilize', icon: Leaf, color: 'bg-green-500', lightBg: 'bg-green-50', lightText: 'text-green-600' },
+  prune:     { label: 'Pruning', icon: Scissors, color: 'bg-orange-500', lightBg: 'bg-orange-50', lightText: 'text-orange-600' },
+  repot:     { label: 'Repotting', icon: RefreshCw, color: 'bg-purple-500', lightBg: 'bg-purple-50', lightText: 'text-purple-600' },
+  other:     { label: 'Other', icon: AlertCircle, color: 'bg-slate-500', lightBg: 'bg-slate-50', lightText: 'text-slate-600' },
 };
-
-const PRIORITY_CONFIG = {
-  high:   { label: 'High',   dot: '#E63946' },
-  normal: { label: 'Normal', dot: '#9BA2AE' },
-  low:    { label: 'Low',    dot: '#4EA8DE' },
-};
-
-const REPEAT_OPTIONS = ['none', 'daily', 'weekly', 'monthly'];
-
-function getTodayStr() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function formatRelative(dt) {
-  const now = new Date();
-  const diff = dt - now;
-  const abs = Math.abs(diff);
-  if (abs < 60000) return 'Now';
-  if (diff < 0) {
-    if (abs < 3600000) return `${Math.round(abs / 60000)}m overdue`;
-    if (abs < 86400000) return `${Math.round(abs / 3600000)}h overdue`;
-    return `${Math.round(abs / 86400000)}d overdue`;
-  }
-  if (diff < 3600000) return `In ${Math.round(diff / 60000)}m`;
-  if (diff < 86400000) return `In ${Math.round(diff / 3600000)}h`;
-  if (diff < 172800000) return `Tomorrow ${dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-  return `${dt.toLocaleDateString([], { month: 'short', day: 'numeric' })} ${dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-}
-
-function Toast({ message, visible }) {
-  return (
-    <div style={{
-      position: 'fixed', bottom: '2rem', left: '50%', transform: `translateX(-50%) translateY(${visible ? 0 : '1rem'})`,
-      background: '#1A1F2E', color: '#fff', fontSize: '13px', fontFamily: "'DM Sans', sans-serif",
-      padding: '10px 20px', borderRadius: '99px', opacity: visible ? 1 : 0,
-      transition: 'all 0.25s ease', pointerEvents: 'none', zIndex: 9999,
-      boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
-    }}>
-      {message}
-    </div>
-  );
-}
-
-function StatCard({ value, label, color }) {
-  return (
-    <div style={{
-      background: '#fff', borderRadius: '14px', padding: '14px 16px',
-      border: '1px solid #F0F2F5', flex: 1,
-    }}>
-      <div style={{ fontSize: '26px', fontWeight: 700, color: color || '#1A1F2E', fontFamily: "'Fraunces', serif", lineHeight: 1 }}>
-        {value}
-      </div>
-      <div style={{ fontSize: '11px', color: '#9BA2AE', marginTop: '4px', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif" }}>
-        {label}
-      </div>
-    </div>
-  );
-}
-
-function TaskItem({ task, onToggle, onDelete, entering }) {
-  const cc = CAT_CONFIG[task.cat];
-  const pc = PRIORITY_CONFIG[task.priority];
-  const overdue = !task.done && task.dt < new Date();
-
-  return (
-    <div style={{
-      background: '#fff',
-      borderRadius: '14px',
-      border: `1px solid ${overdue ? '#FFD6D9' : '#F0F2F5'}`,
-      borderLeft: overdue ? `4px solid #E63946` : task.done ? `4px solid #D1D9E0` : `4px solid ${cc.color}`,
-      padding: '14px 16px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      opacity: task.done ? 0.6 : 1,
-      animation: entering ? 'slideIn 0.3s ease' : undefined,
-      transition: 'box-shadow 0.2s, border-color 0.2s',
-    }}
-      onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.07)'}
-      onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
-    >
-      {/* Check button */}   {/*    */}   {/*   */}   {/* Check button */}
-      <button
-        onClick={() => onToggle(task.id)}
-        style={{
-          width: '22px', height: '22px', borderRadius: '50%', flexShrink: 0, cursor: 'pointer',
-          border: `2px solid ${task.done ? cc.color : '#D1D9E0'}`,
-          background: task.done ? cc.color : 'transparent',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: 'all 0.2s', outline: 'none',
-        }}
-      >
-        {task.done && (
-          <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-            <polyline points="1.5,6 4.5,9 9.5,2" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        )}
-      </button>
-
-      {/* Cat icon pill */}
-      <div style={{
-        width: '32px', height: '32px', borderRadius: '10px', background: cc.bg,
-        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '15px',
-      }}>
-        {cc.icon}
-      </div>
-
-      {/* Body */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
-          fontSize: '14px', fontWeight: 500, color: task.done ? '#9BA2AE' : '#1A1F2E',
-          textDecoration: task.done ? 'line-through' : 'none',
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-          fontFamily: "'DM Sans', sans-serif",
-        }}>
-          {task.name}
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: '12px', fontFamily: "'DM Sans', sans-serif",
-            color: overdue ? '#E63946' : '#9BA2AE',
-          }}>
-            {formatRelative(task.dt)}
-          </span>
-          <span style={{
-            fontSize: '11px', padding: '2px 8px', borderRadius: '99px',
-            background: cc.bg, color: cc.dark, fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          }}>
-            {cc.label}
-          </span>
-          {task.priority !== 'normal' && (
-            <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '11px', color: '#9BA2AE', fontFamily: "'DM Sans', sans-serif" }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: pc.dot, display: 'inline-block' }} />
-              {pc.label}
-            </span>
-          )}
-          {task.repeat !== 'none' && (
-            <span style={{ fontSize: '11px', color: '#9BA2AE', fontFamily: "'DM Sans', sans-serif" }}>↻ {task.repeat}</span>
-          )}
-        </div>
-      </div>
-
-      {/* Delete */}
-      <button
-        onClick={() => onDelete(task.id)}
-        style={{
-          width: '30px', height: '30px', border: 'none', background: 'transparent',
-          borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: '#CBD3DC', transition: 'all 0.15s', flexShrink: 0,
-        }}
-        onMouseEnter={e => { e.currentTarget.style.background = '#FFF0F1'; e.currentTarget.style.color = '#E63946'; }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#CBD3DC'; }}
-      >
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M2 3.5h10M5.5 3.5V2.5h3v1M5 3.5l.5 8M9 3.5l-.5 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-        </svg>
-      </button>
-    </div>
-  );
-}
 
 const PlantTaskReminder = () => {
-  const [tasks, setTasks] = useState([]);
-  const [deletedTasks, setDeletedTasks] = useState([]);
+  const navigate = useNavigate();
+  const [tasks, setTasks] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('plantTasks')) || []; }
+    catch { return []; }
+  });
+  const [deletedTasks, setDeletedTasks] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('plantTasksDeleted')) || []; }
+    catch { return []; }
+  });
   const [tab, setTab] = useState('upcoming');
-  const [catFilter, setCatFilter] = useState('all');
+  const [showForm, setShowForm] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [newEntryId, setNewEntryId] = useState(null);
-  const [toast, setToast] = useState({ visible: false, message: '' });
-
   const [form, setForm] = useState({
     name: '', cat: 'water', priority: 'normal', repeat: 'none',
-    date: getTodayStr(), time: '09:00',
+    date: new Date().toISOString().slice(0, 10), time: '09:00',
   });
+  const [toast, setToast] = useState({ visible: false, message: '' });
 
-  const timersRef = useRef({});
+  useEffect(() => { localStorage.setItem('plantTasks', JSON.stringify(tasks)); }, [tasks]);
+  useEffect(() => { localStorage.setItem('plantTasksDeleted', JSON.stringify(deletedTasks)); }, [deletedTasks]);
 
   const notify = (msg) => {
     setToast({ visible: true, message: msg });
     setTimeout(() => setToast(t => ({ ...t, visible: false })), 3000);
   };
 
-  const scheduleReminder = (task) => {
-    if (timersRef.current[task.id]) clearTimeout(timersRef.current[task.id]);
-    const diff = task.dt - new Date();
-    if (diff > 0) {
-      timersRef.current[task.id] = setTimeout(() => notify(`🌿 Reminder: ${task.name}`), diff);
-    }
-  };
-
-  useEffect(() => {
-    const ref = timersRef.current;
-    return () => Object.values(ref).forEach(clearTimeout);
-  }, []);
-
   const addTask = () => {
     if (!form.name.trim() || !form.date || !form.time) {
       notify('Please fill in name, date and time.'); return;
     }
-    const dt = new Date(`${form.date}T${form.time}`);
-    const task = { id: Date.now(), name: form.name.trim(), cat: form.cat, priority: form.priority, repeat: form.repeat, dt, done: false };
+    const dt = `${form.date}T${form.time}`;
+    const task = { id: Date.now(), name: form.name.trim(), cat: form.cat, priority: form.priority, repeat: form.repeat, dt, done: false, createdAt: new Date().toISOString() };
     setTasks(prev => [...prev, task]);
     setNewEntryId(task.id);
-    scheduleReminder(task);
     setForm(f => ({ ...f, name: '' }));
     notify('Task added');
     setTimeout(() => setNewEntryId(null), 400);
@@ -219,214 +55,222 @@ const PlantTaskReminder = () => {
   const toggleDone = (id) => setTasks(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t));
 
   const deleteTask = (id) => {
-    if (timersRef.current[id]) clearTimeout(timersRef.current[id]);
     const task = tasks.find(t => t.id === id);
-    if (task) setDeletedTasks(prev => [...prev, { ...task, deletedAt: new Date() }]);
+    if (task) setDeletedTasks(prev => [...prev, { ...task, deletedAt: new Date().toISOString() }]);
     setTasks(prev => prev.filter(t => t.id !== id));
     notify('Task removed');
   };
 
+  const restoreTask = (id) => {
+    const task = deletedTasks.find(t => t.id === id);
+    if (task) {
+      setTasks(prev => [...prev, { ...task, done: false }]);
+      setDeletedTasks(prev => prev.filter(t => t.id !== id));
+      notify('Task restored');
+    }
+  };
+
   const filtered = tasks
     .filter(t => tab === 'upcoming' ? !t.done : tab === 'done' ? t.done : true)
-    .filter(t => catFilter === 'all' || t.cat === catFilter)
-    .sort((a, b) => a.dt - b.dt);
+    .sort((a, b) => new Date(a.dt) - new Date(b.dt));
 
-  const usedCats = ['all', ...Object.keys(CAT_CONFIG).filter(c => tasks.some(t => t.cat === c))];
-  const overdueCount = tasks.filter(t => !t.done && t.dt < new Date()).length;
-
-  const inputStyle = {
-    height: '40px', borderRadius: '10px', border: '1px solid #E8ECF0',
-    background: '#F7F9FB', color: '#1A1F2E', fontSize: '14px', padding: '0 12px',
-    fontFamily: "'DM Sans', sans-serif", outline: 'none', width: '100%',
+  const stats = {
+    total: tasks.length,
+    done: tasks.filter(t => t.done).length,
+    overdue: tasks.filter(t => !t.done && new Date(t.dt) < new Date()).length,
   };
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;600&display=swap');
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
-        * { box-sizing: border-box; }
-        body { margin: 0; background: #F4F6FA; }
-        input:focus, select:focus { border-color: #52B788 !important; box-shadow: 0 0 0 3px rgba(82,183,136,0.12); }
-        .tab-btn { border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 6px 14px; border-radius: 99px; transition: all 0.15s; font-weight: 500; }
-        .cat-chip { border: 1px solid #E8ECF0; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 4px 12px; border-radius: 99px; transition: all 0.15s; background: #fff; }
-        .cat-chip:hover { border-color: #52B788; }
-      `}</style>
-
-     <div style={{ 
-        minHeight: '100vh', 
-        background: 'linear-gradient(160deg, #EAF5EF 0%, #F4F6FA 60%)', 
-        padding: '120px 1rem 4rem', 
-        fontFamily: "'DM Sans', sans-serif" 
-      }}>
-        <div style={{ maxWidth: '520px', margin: '0 auto' }}>
-
-          {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '1.75rem' }}>
-            <div>
-              <div style={{ fontSize: '13px', color: '#52B788', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px' }}>
-                🌱 Plant care
-              </div>
-              <h1 style={{ margin: 0, fontSize: '32px', fontWeight: 700, color: '#1A1F2E', fontFamily: "'Fraunces', serif", lineHeight: 1.1, fontStyle: '' }}>
-                Task Planner
-              </h1>
+    <div className="w-full min-h-screen bg-[#f7faf8] pt-16 sm:pt-20 font-sans">
+      {/* Hero */}
+      <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-14 sm:px-6 sm:py-20">
+        <div className="absolute inset-0 -z-20 bg-cover bg-center opacity-20" style={{ backgroundImage: `url(${bgHero})` }} />
+        <div className="absolute -top-24 right-0 -z-10 h-80 w-80 rounded-full bg-lime-400/15 blur-3xl" />
+        <div className="absolute -bottom-32 left-1/4 -z-10 h-72 w-72 rounded-full bg-teal-400/15 blur-3xl" />
+        <div className="mx-auto max-w-7xl">
+          <button onClick={() => navigate(-1)} className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-emerald-100 hover:text-white transition-colors">
+            <ArrowLeft size={16} /> Back
+          </button>
+          <div className="max-w-3xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-100">
+              <Sparkles size={14} className="text-lime-300" /> Plant care scheduling
             </div>
-            <button
-              onClick={() => setShowHistory(true)}
-              style={{ background: '#fff', border: '1px solid #E8ECF0', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', color: '#555E6B', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}
-            >
-              History ({deletedTasks.length})
-            </button>
+            <h1 className="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Plant Task Planner
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-emerald-50/80 sm:text-lg">
+              Schedule watering, fertilizing, pruning, and repotting tasks for your plants with reminders.
+            </p>
           </div>
+        </div>
+      </section>
 
-          {/* Stats */}
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem' }}>
-            <StatCard value={tasks.length} label="Total" />
-            <StatCard value={tasks.filter(t => t.done).length} label="Done" color="#52B788" />
-            <StatCard value={overdueCount} label="Overdue" color={overdueCount > 0 ? '#E63946' : '#9BA2AE'} />
-          </div>
-
-          {/* Form card */}
-          <div style={{ background: '#fff', borderRadius: '20px', padding: '20px', marginBottom: '1.25rem', border: '1px solid #F0F2F5', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' }}>
-            <div style={{ marginBottom: '12px' }}>
-              <input
-                style={{ ...inputStyle, background: '#fff', border: '1.5px solid #E8ECF0', fontSize: '15px', height: '44px' }}
-                placeholder="What needs doing? e.g. Water the monstera"
-                value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                onKeyDown={e => e.key === 'Enter' && addTask()}
-              />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+      <main className="relative z-10 mx-auto max-w-4xl px-4 pb-16 sm:px-6 sm:pb-20">
+        <div className="-mt-7">
+          <div className="bg-white border border-slate-200 rounded-3xl shadow-2xl shadow-emerald-950/10 p-6 sm:p-8">
+            
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
               {[
-                { key: 'cat', options: Object.entries(CAT_CONFIG).map(([v, c]) => ({ value: v, label: `${c.icon} ${c.label}` })) },
-                { key: 'priority', options: Object.entries(PRIORITY_CONFIG).map(([v, c]) => ({ value: v, label: c.label })) },
-                { key: 'repeat', options: REPEAT_OPTIONS.map(v => ({ value: v, label: v === 'none' ? 'No repeat' : v.charAt(0).toUpperCase() + v.slice(1) })) },
-              ].map(({ key, options }) => (
-                <select key={key} style={inputStyle} value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}>
-                  {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                </select>
+                { value: stats.total, label: 'Total Tasks', color: 'text-slate-800', bg: 'bg-slate-50' },
+                { value: stats.done, label: 'Completed', color: 'text-green-600', bg: 'bg-green-50' },
+                { value: stats.overdue, label: 'Overdue', color: 'text-red-600', bg: 'bg-red-50' },
+              ].map((s, i) => (
+                <div key={i} className={`${s.bg} rounded-2xl p-4 text-center border border-slate-100`}>
+                  <p className={`text-2xl font-extrabold ${s.color}`}>{s.value}</p>
+                  <p className="text-xs text-slate-500 mt-1">{s.label}</p>
+                </div>
               ))}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
-              <input type="date" style={inputStyle} value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
-              <input type="time" style={inputStyle} value={form.time} onChange={e => setForm(f => ({ ...f, time: e.target.value }))} />
-            </div>
-            <button
-              onClick={addTask}
-              style={{
-                width: '100%', height: '44px', borderRadius: '12px', border: 'none',
-                background: 'linear-gradient(135deg, #52B788, #2D9B6A)',
-                color: '#fff', fontSize: '15px', fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
-                cursor: 'pointer', letterSpacing: '0.02em', transition: 'opacity 0.15s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-            >
-              + Add Task
-            </button>
-          </div>
 
-          {/* Tabs */}
-          <div style={{ display: 'flex', gap: '4px', background: '#EAECF0', borderRadius: '99px', padding: '3px', marginBottom: '1rem' }}>
-            {[['upcoming', 'Upcoming'], ['done', 'Completed'], ['all', 'All']].map(([value, label]) => (
-              <button
-                key={value}
-                className="tab-btn"
-                onClick={() => { setTab(value); setCatFilter('all'); }}
-                style={{
-                  flex: 1,
-                  background: tab === value ? '#fff' : 'transparent',
-                  color: tab === value ? '#1A1F2E' : '#9BA2AE',
-                  boxShadow: tab === value ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
-                }}
-              >
-                {label}
+            {/* Add Task Button & History */}
+            <div className="flex items-center justify-between mb-6">
+              <button onClick={() => setShowForm(!showForm)}
+                className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-5 py-3 text-sm font-bold text-white hover:bg-green-700 transition-all shadow-md">
+                <Plus size={18} /> {showForm ? 'Close' : 'Add Task'}
               </button>
-            ))}
-          </div>
+              <button onClick={() => setShowHistory(true)}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
+                <Trash2 size={16} /> History ({deletedTasks.length})
+              </button>
+            </div>
 
-          {/* Category filters */}
-          {usedCats.length > 1 && (
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
-              {usedCats.map(c => (
-                <button
-                  key={c}
-                  className="cat-chip"
-                  onClick={() => setCatFilter(c)}
-                  style={{
-                    background: catFilter === c ? '#1A1F2E' : '#fff',
-                    color: catFilter === c ? '#fff' : '#555E6B',
-                    borderColor: catFilter === c ? '#1A1F2E' : '#E8ECF0',
-                  }}
-                >
-                  {c === 'all' ? 'All' : `${CAT_CONFIG[c].icon} ${CAT_CONFIG[c].label}`}
+            {/* Form */}
+            {showForm && (
+              <div className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-4">
+                <input type="text" value={form.name} onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
+                  placeholder="Task name (e.g. Water the tomato plants)"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100" />
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <select value={form.cat} onChange={(e) => setForm(f => ({ ...f, cat: e.target.value }))}
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm outline-none focus:border-green-500">
+                    {Object.entries(CAT_CONFIG).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+                  </select>
+                  <select value={form.repeat} onChange={(e) => setForm(f => ({ ...f, repeat: e.target.value }))}
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm outline-none focus:border-green-500">
+                    <option value="none">No repeat</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                  <input type="date" value={form.date} onChange={(e) => setForm(f => ({ ...f, date: e.target.value }))}
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm outline-none focus:border-green-500" />
+                  <input type="time" value={form.time} onChange={(e) => setForm(f => ({ ...f, time: e.target.value }))}
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm outline-none focus:border-green-500" />
+                </div>
+                <button onClick={addTask}
+                  className="w-full rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 px-5 py-3 text-sm font-bold text-white hover:from-green-700 hover:to-emerald-700 transition-all shadow-md">
+                  <Plus size={18} className="inline mr-1" /> Schedule Task
+                </button>
+              </div>
+            )}
+
+            {/* Tabs */}
+            <div className="flex gap-2 mb-4">
+              {[['upcoming', 'Upcoming'], ['done', 'Completed'], ['all', 'All']].map(([value, label]) => (
+                <button key={value} onClick={() => setTab(value)}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${tab === value ? 'bg-green-700 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+                  {label}
                 </button>
               ))}
             </div>
-          )}
 
-          {/* Task list */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {filtered.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#9BA2AE', fontSize: '14px', fontFamily: "'DM Sans', sans-serif" }}>
-                <div style={{ fontSize: '40px', marginBottom: '10px' }}>🌱</div>
-                No tasks here yet
-              </div>
-            ) : (
-              filtered.map(t => (
-                <TaskItem key={t.id} task={t} onToggle={toggleDone} onDelete={deleteTask} entering={t.id === newEntryId} />
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* History Modal */}
-      {showHistory && (
-        <div
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 999, padding: '1rem' }}
-          onClick={e => e.target === e.currentTarget && setShowHistory(false)}
-        >
-          <div style={{ background: '#fff', borderRadius: '20px', padding: '24px', width: '100%', maxWidth: '440px', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 700, fontFamily: "'Fraunces', serif", color: '#1A1F2E', fontStyle: 'italic' }}>Task History</h2>
-              <button onClick={() => setShowHistory(false)} style={{ border: 'none', background: 'none', fontSize: '20px', cursor: 'pointer', color: '#9BA2AE' }}>×</button>
-            </div>
-            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {deletedTasks.length === 0 ? (
-                <p style={{ color: '#9BA2AE', fontSize: '14px', textAlign: 'center', padding: '2rem 0', fontFamily: "'DM Sans', sans-serif" }}>No deleted tasks yet.</p>
+            {/* Task List */}
+            <div className="space-y-3">
+              {filtered.length === 0 ? (
+                <div className="text-center py-12 text-slate-400">
+                  <Bell size={40} className="mx-auto mb-3 opacity-50" />
+                  <p className="font-medium">No tasks found</p>
+                  <p className="text-sm">Add your first plant care task to get started.</p>
+                </div>
               ) : (
-                deletedTasks.slice().reverse().map(t => {
-                  const cc = CAT_CONFIG[t.cat];
+                filtered.map(task => {
+                  const cc = CAT_CONFIG[task.cat] || CAT_CONFIG.other;
+                  const Icon = cc.icon;
+                  const isOverdue = !task.done && new Date(task.dt) < new Date();
                   return (
-                    <div key={t.id + '-del'} style={{ background: '#F7F9FB', borderRadius: '12px', padding: '12px 14px', display: 'flex', gap: '10px', alignItems: 'center' }}>
-                      <div style={{ fontSize: '20px' }}>{cc.icon}</div>
-                      <div>
-                        <div style={{ fontSize: '14px', fontWeight: 500, color: '#1A1F2E', fontFamily: "'DM Sans', sans-serif" }}>{t.name}</div>
-                        <div style={{ fontSize: '12px', color: '#9BA2AE', fontFamily: "'DM Sans', sans-serif" }}>
-                          Was due: {t.dt.toLocaleDateString([], { month: 'short', day: 'numeric' })} · {cc.label}
+                    <div
+                      key={task.id}
+                      className={`group relative rounded-2xl border p-5 transition-all duration-300 hover:shadow-lg ${task.done ? 'bg-slate-50 border-slate-200' : isOverdue ? 'bg-red-50 border-red-200' : 'bg-white border-slate-100'}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <button onClick={() => toggleDone(task.id)}
+                          className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${task.done ? 'bg-green-500 border-green-500' : 'border-slate-300 hover:border-green-400'}`}>
+                          {task.done && <CheckCircle2 size={14} className="text-white" />}
+                        </button>
+                        <div className={`p-2.5 rounded-xl ${cc.lightBg}`}>
+                          <Icon size={20} className={cc.lightText} />
                         </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className={`font-bold text-sm ${task.done ? 'text-slate-400 line-through' : 'text-slate-800'}`}>{task.name}</h4>
+                          <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                            <span className={`text-xs font-medium ${isOverdue ? 'text-red-500' : 'text-slate-400'}`}>
+                              <Clock size={12} className="inline mr-1" />
+                              {new Date(task.dt).toLocaleDateString([], { month: 'short', day: 'numeric' })} {new Date(task.dt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${cc.lightBg} ${cc.lightText}`}>{cc.label}</span>
+                            {task.repeat !== 'none' && (
+                              <span className="text-xs text-slate-400"><RefreshCw size={11} className="inline mr-0.5" />{task.repeat}</span>
+                            )}
+                          </div>
+                        </div>
+                        <button onClick={() => deleteTask(task.id)}
+                          className="shrink-0 p-2 rounded-lg text-slate-300 hover:bg-red-50 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100">
+                          <Trash2 size={16} />
+                        </button>
                       </div>
                     </div>
                   );
                 })
               )}
             </div>
-            {deletedTasks.length > 0 && (
-              <button
-                onClick={() => { setDeletedTasks([]); notify('History cleared'); }}
-                style={{ marginTop: '16px', height: '40px', borderRadius: '10px', border: '1px solid #FFD6D9', background: '#FFF5F5', color: '#E63946', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}
-              >
-                Clear History
-              </button>
+          </div>
+        </div>
+      </main>
+
+      {/* History Modal */}
+      {showHistory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowHistory(false)}>
+          <div className="bg-white rounded-3xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-extrabold text-slate-900 mb-4">Task History</h2>
+            {deletedTasks.length === 0 ? (
+              <p className="text-sm text-slate-400 text-center py-8">No deleted tasks.</p>
+            ) : (
+              <div className="space-y-2 max-h-80 overflow-y-auto">
+                {deletedTasks.slice().reverse().map(t => {
+                  const cc = CAT_CONFIG[t.cat] || CAT_CONFIG.other;
+                  const Icon = cc.icon;
+                  return (
+                    <div key={t.id + '-del'} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                      <div className={`p-1.5 rounded-lg ${cc.lightBg}`}><Icon size={14} className={cc.lightText} /></div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-slate-700">{t.name}</p>
+                        <p className="text-xs text-slate-400">{cc.label} · {t.dt ? new Date(t.dt).toLocaleDateString() : ''}</p>
+                      </div>
+                      <button onClick={() => restoreTask(t.id)}
+                        className="text-xs font-bold text-green-600 hover:text-green-700 px-3 py-1.5 rounded-lg hover:bg-green-50 transition-all">
+                        Restore
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
             )}
+            <button onClick={() => setShowHistory(false)}
+              className="w-full mt-4 rounded-xl bg-slate-100 px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-200 transition-all">
+              Close
+            </button>
           </div>
         </div>
       )}
 
-      <Toast message={toast.message} visible={toast.visible} />
-    </>
+      {/* Toast */}
+      <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${toast.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="bg-slate-800 text-white text-sm font-medium px-6 py-3 rounded-full shadow-lg">
+          {toast.message}
+        </div>
+      </div>
+    </div>
   );
 };
 

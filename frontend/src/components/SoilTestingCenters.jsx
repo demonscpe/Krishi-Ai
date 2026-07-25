@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { Sparkles, MapPin, Search, Loader2, ArrowLeft, Navigation } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import BgImg from '../assets/106.jpg';
+import axios from 'axios';
+import bgHero from "../assets/bgHero.png";
 
-// Fix for missing marker icon in Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -20,156 +20,101 @@ export default function SoilTestingCenters() {
   const [loading, setLoading] = useState(false);
 
   const findSoilLabs = async () => {
-    if (!location.trim()) {
-      setError('Please enter a location');
-      return;
-    }
-
-    setError('');
-    setLabs([]); // Clear previous results
-    setLoading(true);
-
+    if (!location.trim()) { setError('Please enter a location'); return; }
+    setError(''); setLabs([]); setLoading(true);
     try {
-      // NOTE: Render free tier services "spin down" after inactivity.
-      // This request might take 30+ seconds to start if the server is cold.
-      const response = await axios.post('https://agrotech-api.onrender.com/soil_labs', 
-        { location: location },
-        { timeout: 40000 } // Give it 40 seconds to wake up
-      );
-
+      const response = await axios.post('https://agrotech-api.onrender.com/soil_labs', { location }, { timeout: 40000 });
       if (response.status === 200 && Array.isArray(response.data)) {
-        if (response.data.length === 0) {
-          setError('No labs found in this area. Try a nearby city.');
-        } else {
-          setLabs(response.data);
-        }
-      } else {
-        setError('Unexpected response from server.');
+        if (response.data.length === 0) setError('No labs found in this area. Try a nearby city.');
+        else setLabs(response.data);
       }
-    } catch (err) {
-      console.error("API Error:", err);
-      if (err.code === 'ECONNABORTED') {
-        setError('Server is taking too long to wake up. Please try again in a moment.');
-      } else {
-        setError('Failed to connect to the server. It might be offline.');
-      }
-    } finally {
-      setLoading(false);
-    }
+    } catch {
+      setError('Server is loading. Please try again in a moment.');
+    } finally { setLoading(false); }
   };
 
   return (
-    <div 
-      className="min-h-screen flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 mt-10 font-['Poppins'] antialiased" 
-      style={{ 
-        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url(${BgImg})`, 
-        backgroundSize: 'cover', 
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      }}
-    >
-      <div className="glassmorphic-container max-w-5xl w-full space-y-8 p-6 md:p-10 rounded-[2rem] shadow-2xl backdrop-blur-md bg-white/80 border border-white/20">
-        
-        {/* Header Section */}
-        <div className="text-center space-y-2">
-          <h1 className="text-[36px] leading-tight font-bold text-green-900">
-            Soil Testing Centers Finder
-          </h1>
-          <p className="text-gray-600 font-medium italic">Find laboratories to analyze your soil health</p>
-          <div className="h-1 w-20 bg-green-600 mx-auto rounded-full mt-2"></div>
-        </div>
-
-        {/* Search Bar */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-0 max-w-lg mx-auto overflow-hidden rounded-2xl shadow-lg border border-green-100 bg-white">
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && findSoilLabs()}
-            placeholder="Enter city (e.g. Pune, Delhi)..."
-            className="w-full px-6 py-4 bg-transparent text-gray-700 focus:outline-none text-lg"
-          />
-          <button
-            onClick={findSoilLabs}
-            disabled={loading}
-            className="w-full sm:w-auto px-8 py-4 bg-green-700 text-white font-bold hover:bg-green-800 transition-colors disabled:opacity-70 flex items-center justify-center whitespace-nowrap"
-          >
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                Wait 30s...
-              </span>
-            ) : (
-              'Find Labs'
-            )}
-          </button>
-        </div>
-
-        {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mx-auto max-w-md text-sm font-medium">
-            ⚠️ {error}
+    <div className="w-full min-h-screen bg-[#f7faf8] pt-16 sm:pt-20 font-sans">
+      <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-14 sm:px-6 sm:py-20">
+        <div className="absolute inset-0 -z-20 bg-cover bg-center opacity-20" style={{ backgroundImage: `url(${bgHero})` }} />
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-3xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-100">
+              <Sparkles size={14} className="text-lime-300" /> Laboratory locator
+            </div>
+            <h1 className="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Soil Testing Centers
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-emerald-50/80 sm:text-lg">
+              Find laboratories to analyze your soil health and get accurate nutrient reports.
+            </p>
           </div>
-        )}
+        </div>
+      </section>
 
-        {labs.length > 0 && !loading && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <main className="relative z-10 mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-20">
+        <div className="-mt-7">
+          <div className="bg-white border border-slate-200 rounded-3xl shadow-2xl shadow-emerald-950/10 p-6 sm:p-10">
             
-            <div className="lg:col-span-8">
-              <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-white h-[450px]">
-                {/* Key prop ensures map re-renders when first lab changes */}
-                <MapContainer 
-                  key={labs[0].latitude}
-                  center={[labs[0].latitude, labs[0].longitude]} 
-                  zoom={11} 
-                  className="h-full w-full"
-                  zoomControl={false}
-                >
-                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                  <ZoomControl position="bottomright" />
-                  {labs.map((lab, index) => (
-                    <Marker key={index} position={[lab.latitude, lab.longitude]}>
-                      <Popup>
-                        <div className="font-['Poppins']">
-                          <h4 className="font-bold text-green-800 leading-tight">{lab.name}</h4>
-                          <a href={lab.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-xs underline">Open Maps</a>
-                        </div>
-                      </Popup>
-                    </Marker>
-                  ))}
-                </MapContainer>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto mb-8">
+              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && findSoilLabs()}
+                placeholder="Enter city (e.g. Pune, Delhi)..."
+                className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100" />
+              <button onClick={findSoilLabs} disabled={loading}
+                className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-6 py-3 text-sm font-bold text-white hover:bg-green-700 transition-all shadow-md disabled:opacity-60">
+                {loading ? <Loader2 size={18} className="animate-spin" /> : <Search size={18} />}
+                {loading ? 'Searching...' : 'Find Labs'}
+              </button>
             </div>
 
-            <div className="lg:col-span-4 space-y-4">
-              <h3 className="text-xl font-bold text-green-900 flex items-center gap-2">
-                <span className="bg-green-100 p-2 rounded-lg text-sm">📍</span> {labs.length} Labs Found
-              </h3>
-              <div className="max-h-[380px] overflow-y-auto pr-2 space-y-3">
-                {labs.map((lab, index) => (
-                  <div key={index} className="bg-white/90 p-4 rounded-xl border border-white shadow-sm hover:shadow-md transition-all">
-                    <p className="font-bold text-gray-800 text-sm">{lab.name}</p>
-                    <a 
-                      href={lab.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-[10px] font-bold text-green-700 tracking-widest uppercase mt-2 block"
-                    >
-                      View Location
-                    </a>
+            {error && (
+              <div className="mb-6 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-600 text-center">{error}</div>
+            )}
+
+            {labs.length > 0 && !loading && (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div className="lg:col-span-7">
+                  <div className="rounded-2xl overflow-hidden border-2 border-slate-200 h-[450px]">
+                    <MapContainer key={labs[0].latitude} center={[labs[0].latitude, labs[0].longitude]} zoom={11} className="h-full w-full" zoomControl={false}>
+                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      <ZoomControl position="bottomright" />
+                      {labs.map((lab, i) => (
+                        <Marker key={i} position={[lab.latitude, lab.longitude]}>
+                          <Popup><b className="text-green-800">{lab.name}</b><br/><a href={lab.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-xs">Open Maps</a></Popup>
+                        </Marker>
+                      ))}
+                    </MapContainer>
                   </div>
-                ))}
+                </div>
+                <div className="lg:col-span-5 space-y-4">
+                  <h3 className="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+                    <MapPin size={20} className="text-green-600" /> {labs.length} Labs Found
+                  </h3>
+                  <div className="max-h-[380px] overflow-y-auto space-y-3 pr-2">
+                    {labs.map((lab, i) => (
+                      <div key={i} className="rounded-xl border border-slate-100 bg-slate-50 p-4 hover:border-green-200 hover:bg-green-50 transition-all">
+                        <p className="font-bold text-slate-800 text-sm">{lab.name}</p>
+                        <a href={lab.link} target="_blank" rel="noopener noreferrer"
+                          className="text-xs font-bold text-green-600 hover:text-green-700 mt-2 inline-flex items-center gap-1">
+                          <Navigation size={12} /> View Location
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {!loading && labs.length === 0 && !error && (
-          <div className="text-center py-10">
-            <div className="text-4xl mb-2 opacity-50">🌾</div>
-            <p className="text-gray-500 font-medium">Search for your city to see nearby testing centers.</p>
+            {!loading && labs.length === 0 && !error && (
+              <div className="text-center py-16 text-slate-400">
+                <MapPin size={48} className="mx-auto mb-3 opacity-50" />
+                <p className="font-medium">Search for your city to see nearby testing centers.</p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

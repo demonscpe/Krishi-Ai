@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import bgHero from "../../assets/bgHero.png";
 
-const ANALYSIS_TYPES = ['All', 'Image Analysis', 'Test Input', 'Health Analyzer', 'Fertilizer', 'Quality Prediction'];
+const ANALYSIS_TYPES = ['Dashboard', 'Image Analysis', 'Test Input', 'Health Analyzer', 'Fertilizer', 'Quality Prediction'];
 const TIME_PERIODS = [
   { value: 'all', label: 'All Time' },
   { value: '7', label: 'Last 7 Days' },
@@ -74,7 +74,7 @@ export default function SoilDashboard() {
             >
               {ANALYSIS_TYPES.map((type) => (
                 <option key={type} value={type}>
-                  {type === 'All' ? 'All Types' : type}
+                  {type === 'Dashboard' ? 'Dashboard' : type}
                 </option>
               ))}
             </select>

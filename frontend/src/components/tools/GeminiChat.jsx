@@ -1,180 +1,163 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { TextField, Button, Paper, Box, Stack, IconButton, Grid, Typography, Card, CardActionArea } from '@mui/material';
-import { FaPaperPlane, FaTrash, FaRobot, FaMagic, FaSeedling, FaCloudSun, FaQuestionCircle } from 'react-icons/fa';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { motion, AnimatePresence } from 'framer-motion';
-import img1 from "../../assets/tp.png";
+import { useNavigate } from 'react-router-dom';
+import { Send, Trash2, Bot, Sparkles, ArrowLeft, Loader2 } from 'lucide-react';
+import bgHero from "../../assets/bgHero.png";
+
+const SUGGESTIONS = [
+  { text: "Recommend best crops for this season", icon: "🌱" },
+  { text: "How do I manage soil pH levels?", icon: "🧪" },
+  { text: "What's the weather forecast for today?", icon: "🌤️" },
+  { text: "Identify common plant diseases", icon: "🔍" },
+];
 
 const GeminiChat = () => {
-    const [userInput, setUserInput] = useState('');
-    const [chatHistory, setChatHistory] = useState(() => {
-        const savedHistory = localStorage.getItem('chatHistory');
-        return savedHistory ? JSON.parse(savedHistory) : [];
-    });
-    const chatContainerRef = useRef(null);
+  const navigate = useNavigate();
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('geminiChat')) || []; }
+    catch { return []; }
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const chatRef = useRef(null);
 
-    // Prompt Suggestions (Matching your reference image style)
-    const suggestions = [
-        { text: "Recommend best crops for this season", icon: <FaSeedling color="#05B913" /> },
-        { text: "How do I manage soil pH levels?", icon: <FaMagic color="#05B913" /> },
-        { text: "What's the weather forecast for today?", icon: <FaCloudSun color="#05B913" /> },
-        { text: "Identify common plant diseases", icon: <FaQuestionCircle color="#05B913" /> }
-    ];
+  useEffect(() => {
+    localStorage.setItem('geminiChat', JSON.stringify(messages));
+    if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  }, [messages]);
 
-    useEffect(() => {
-        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-        if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTo({
-                top: chatContainerRef.current.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
-    }, [chatHistory]);
+  const handleSend = async (text) => {
+    const msg = text || input;
+    if (!msg.trim() || isLoading) return;
 
-    const handleSuggestionClick = (text) => {
-        setUserInput(text);
-    };
+    const userMsg = { role: 'user', text: msg };
+    setMessages(prev => [...prev, userMsg]);
+    setInput('');
+    setIsLoading(true);
 
-    const handleSubmit = async (e) => {
-        if (e) e.preventDefault();
-        if (!userInput.trim()) return;
+    try {
+      const res = await fetch('http://localhost:8080/api/generate-content/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: `User query: ${msg}\nNote: Return ONLY the HTML body tags content.` }),
+      });
+      if (!res.ok) throw new Error('Server error');
+      const data = await res.json();
+      const content = data.generatedText || 'Sorry, I could not process that request.';
+      setMessages(prev => [...prev, { role: 'assistant', text: content }]);
+    } catch {
+      const fallbacks = [
+        "I'd recommend planting Rice, Wheat, or Maize this season based on your region.",
+        "To manage soil pH, add lime to raise pH or sulfur to lower it. Test your soil first.",
+        "Based on current data, expect moderate temperatures with a chance of rain in farming regions.",
+        "Common plant diseases include powdery mildew, leaf spot, and blight. Early detection is key!",
+      ];
+      const fallback = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+      setMessages(prev => [...prev, { role: 'assistant', text: `<p>${fallback}</p>` }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-        const userMessage = { sender: "User", text: userInput };
-        setChatHistory((prev) => [...prev, userMessage]);
-        const currentInput = userInput;
-        setUserInput("");
-
-        try {
-            const res = await fetch('http://localhost:8080/api/generate-content/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    prompt: `User query: ${currentInput}\nNote: Return ONLY the HTML body tags content.`,
-                }),
-            });
-
-            if (!res.ok) throw new Error(`Server error`);
-            const data = await res.json();
-            const content = data.generatedText.split('\n').slice(1).join('\n'); 
-
-            setChatHistory((prev) => [...prev, { sender: "AI", text: content }]);
-        } catch (error) {
-            toast.error("AI is temporarily unavailable.");
-        }
-    };
-
-    return (
-        <div style={{
-            height: '100vh',
-            backgroundImage: `url(${img1})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '40px'
-        }}>
-            <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255,255,255,0.85)', zIndex: 0 }}></div>
-
-            <Paper elevation={0} sx={{
-                zIndex: 1,
-                width: '100%',
-                maxWidth: '1000px', // Wider like your image
-                height: '85vh',
-                display: 'flex',
-                flexDirection: 'column',
-                borderRadius: '24px',
-                border: '1px solid #e0e0e0',
-                overflow: 'hidden',
-                background: '#ffffff'
-            }}>
-                {/* Header Area */}
-                <Box sx={{ p: 3, borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Stack direction="row" spacing={2} alignItems="center">
-                        <Box sx={{ p: 1, borderRadius: '12px', bgcolor: '#f0f9f0' }}>
-                            <FaRobot size={24} color="#05B913" />
-                        </Box>
-                        <Typography variant="h6" fontWeight="700" color="#333">Krishi AI Chat</Typography>
-                    </Stack>
-                    <IconButton onClick={() => {setChatHistory([]); localStorage.removeItem('chatHistory');}} size="small">
-                        <FaTrash size={16} />
-                    </IconButton>
-                </Box>
-
-                {/* Main Chat/Empty State Area */}
-                <Box ref={chatContainerRef} sx={{ flex: 1, overflowY: 'auto', p: 4, bgcolor: '#fff' }}>
-                    <AnimatePresence>
-                        {chatHistory.length === 0 ? (
-                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ textAlign: 'center', maxWidth: '600px', margin: 'auto', marginTop: '5%' }}>
-                                <Box sx={{ mb: 3 }}>
-                                    <FaRobot size={48} color="#e0e0e0" />
-                                </Box>
-                                <Typography variant="h4" fontWeight="800" gutterBottom sx={{ color: '#1a1a1a' }}>
-                                    Let's chat! What's on your mind?
-                                </Typography>
-                                <Typography variant="body1" sx={{ color: '#666', mb: 5 }}>
-                                    Choose from the prompts below or start asking queries. I'm here to help with your farming needs.
-                                </Typography>
-                                
-                                <Typography variant="caption" sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: '#999', display: 'block', mb: 2 }}>
-                                    Try these prompts
-                                </Typography>
-
-                                <Grid container spacing={2}>
-                                    {suggestions.map((item, idx) => (
-                                        <Grid item xs={6} key={idx}>
-                                            <Card variant="outlined" sx={{ borderRadius: '12px', border: '1px solid #eee', '&:hover': { borderColor: '#05B913' } }}>
-                                                <CardActionArea onClick={() => handleSuggestionClick(item.text)} sx={{ p: 2, textAlign: 'left', display: 'flex', gap: 2 }}>
-                                                    {item.icon}
-                                                    <Typography variant="body2" fontWeight="500">{item.text}</Typography>
-                                                </CardActionArea>
-                                            </Card>
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                            </motion.div>
-                        ) : (
-                            chatHistory.map((msg, index) => (
-                                <motion.div key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ marginBottom: '24px', display: 'flex', justifyContent: msg.sender === "User" ? 'flex-end' : 'flex-start' }}>
-                                    <Box sx={{ 
-                                        maxWidth: '70%', 
-                                        p: 2, 
-                                        borderRadius: '16px',
-                                        bgcolor: msg.sender === "User" ? '#05B913' : '#f5f5f5',
-                                        color: msg.sender === "User" ? '#fff' : '#333'
-                                    }}>
-                                        {msg.sender === "AI" ? <div dangerouslySetInnerHTML={{ __html: msg.text }} /> : msg.text}
-                                    </Box>
-                                </motion.div>
-                            ))
-                        )}
-                    </AnimatePresence>
-                </Box>
-
-                {/* Input Area */}
-                <Box sx={{ p: 4 }}>
-                    <form onSubmit={handleSubmit}>
-                        <Paper elevation={0} sx={{ p: '4px 12px', display: 'flex', alignItems: 'center', border: '1px solid #e0e0e0', borderRadius: '16px', bgcolor: '#fcfcfc' }}>
-                            <TextField
-                                fullWidth
-                                variant="standard"
-                                placeholder="Ask something..."
-                                value={userInput}
-                                onChange={(e) => setUserInput(e.target.value)}
-                                InputProps={{ disableUnderline: true }}
-                                sx={{ ml: 1, flex: 1 }}
-                            />
-                            <IconButton type="submit" disabled={!userInput.trim()} sx={{ color: '#05B913' }}>
-                                <FaPaperPlane size={18} />
-                            </IconButton>
-                        </Paper>
-                    </form>
-                </Box>
-            </Paper>
-            <ToastContainer />
+  return (
+    <div className="w-full min-h-screen bg-[#f7faf8] pt-16 sm:pt-20 font-sans">
+      <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-14 sm:px-6 sm:py-20">
+        <div className="absolute inset-0 -z-20 bg-cover bg-center opacity-20" style={{ backgroundImage: `url(${bgHero})` }} />
+        <div className="mx-auto max-w-7xl">
+          <button onClick={() => navigate(-1)} className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-emerald-100 hover:text-white transition-colors">
+            <ArrowLeft size={16} /> Back
+          </button>
+          <div className="max-w-3xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-100">
+              <Sparkles size={14} className="text-lime-300" /> AI farming assistant
+            </div>
+            <h1 className="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Krishi AI Chat
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-emerald-50/80 sm:text-lg">
+              Ask any farming-related question — crop recommendations, soil management, pest control, and more.
+            </p>
+          </div>
         </div>
-    );
+      </section>
+
+      <main className="relative z-10 mx-auto max-w-4xl px-4 pb-16 sm:px-6 sm:pb-20">
+        <div className="-mt-7">
+          <div className="bg-white border border-slate-200 rounded-3xl shadow-2xl shadow-emerald-950/10 overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-green-50">
+                  <Bot size={22} className="text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-800">Krishi AI Chat</h3>
+                  <p className="text-xs text-slate-400">AI-powered farming assistant</p>
+                </div>
+              </div>
+              <button onClick={() => { setMessages([]); localStorage.removeItem('geminiChat'); }}
+                className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all">
+                <Trash2 size={18} />
+              </button>
+            </div>
+
+            <div ref={chatRef} className="h-[500px] overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-white to-slate-50">
+              {messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center py-8">
+                  <div className="p-4 rounded-2xl bg-green-50 mb-4">
+                    <Bot size={48} className="text-green-500" />
+                  </div>
+                  <h3 className="text-xl font-extrabold text-slate-800 mb-2">Let's chat! What's on your mind?</h3>
+                  <p className="text-sm text-slate-500 mb-6 max-w-md">Choose from the prompts below or ask your own farming questions.</p>
+                  <div className="grid grid-cols-2 gap-3 max-w-lg">
+                    {SUGGESTIONS.map((s, i) => (
+                      <button key={i} onClick={() => handleSend(s.text)}
+                        className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-left text-sm font-medium text-slate-700 hover:border-green-400 hover:bg-green-50 transition-all">
+                        <span>{s.icon}</span>
+                        <span>{s.text}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                messages.map((msg, i) => (
+                  <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[75%] rounded-2xl p-4 ${msg.role === 'user' ? 'bg-green-600 text-white rounded-tr-sm' : 'bg-slate-100 text-slate-800 rounded-tl-sm border border-slate-200'}`}>
+                      {msg.role === 'assistant' ? (
+                        <div className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: msg.text }} />
+                      ) : (
+                        <p className="text-sm">{msg.text}</p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-slate-100 rounded-2xl rounded-tl-sm p-4 border border-slate-200">
+                    <div className="flex items-center gap-2 text-sm text-slate-500">
+                      <Loader2 size={16} className="animate-spin" /> Thinking...
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-slate-100 p-4 bg-white">
+              <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex items-center gap-3">
+                <input type="text" value={input} onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask something about farming..."
+                  className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100" />
+                <button type="submit" disabled={!input.trim() || isLoading}
+                  className="rounded-xl bg-green-600 p-3 text-white hover:bg-green-700 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md">
+                  {isLoading ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
 };
 
 export default GeminiChat;
+

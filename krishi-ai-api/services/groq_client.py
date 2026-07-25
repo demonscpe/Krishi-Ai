@@ -1,52 +1,9 @@
-"""Groq LLM client for the chatbot endpoint."""
+"""Groq LLM client for the chatbot endpoint with RAG support."""
 import os
 from groq import Groq
+from typing import List, Dict, Tuple
 from config import GROQ_API_KEY
-
-# Premade answers for common questions
-PREMADE_REQUESTS = {
-    "What is AgroTech AI?": (
-        "AgroTech AI is a cutting-edge platform that uses artificial intelligence to improve farming practices. "
-        "It helps farmers make better decisions by providing insights based on data, ultimately leading to more efficient and productive agriculture. "
-        "To learn more about us, feel free to visit our <a href='https://agro-tech-ai.vercel.app/aboutus' style='color: blue; text-decoration: underline;'>About Us page</a>."
-    ),
-    "How does the equipment rental platform work?": (
-        "Our equipment rental platform lets farmers easily rent advanced farming equipment when they need it. "
-        "This on-demand service allows you to access the latest tools without the high costs of ownership, helping you to enhance your farming operations."
-    ),
-    "Is there any training for using the technology?": (
-        "Yes, we provide detailed training modules designed to help farmers learn how to use our technology effectively. "
-        "These modules cover everything from basic operations to advanced features, ensuring that you feel confident in using our tools."
-    ),
-    "How do I get started with AgroTech AI?": (
-        "To get started, go to the <a href='https://agro-tech-ai.vercel.app/login' style='color: blue; text-decoration: underline;'>Login</a> in the navigation bar. "
-        "From there, select 'Don't have an account? Sign Up' and fill in your name, email, and password to explore our AI-powered tools and services!"
-    ),
-    "Why use AI in agriculture?": (
-        "AI optimizes resources, predicts crop yields, and reduces waste, improving the overall efficiency of farming practices. "
-        "Check out our <a href='https://agro-tech-ai.vercel.app' style='color: blue; text-decoration: underline;'>home page</a> to learn more."
-    ),
-    "How do we do it?": (
-        "We use machine learning models to analyze data, optimize crop yields, and automate various agricultural processes. "
-        "Visit our <a href='https://agro-tech-ai.vercel.app/aboutus' style='color: blue; text-decoration: underline;'>About Us page</a> to learn more about our approach."
-    ),
-    "What kind of solutions does AgroTech AI offer?": (
-        "AgroTech AI offers solutions like precision farming, automated irrigation, and pest control using AI-driven analytics. "
-        "These solutions help farmers increase productivity and improve their overall yield."
-    ),
-    "What features does AgroTech AI offer?": (
-        "Our platform provides features such as soil analysis, crop monitoring, and AI-driven decision-making tools. "
-        "Check out the navigation bar on our <a href='https://agro-tech-ai.vercel.app' style='color: blue; text-decoration: underline;'>website</a> to access all the features available."
-    ),
-    "How do I create an account?": (
-        "To sign up, go to the <a href='https://agro-tech-ai.vercel.app/login' style='color: blue; text-decoration: underline;'>Login</a> in the navigation bar, then select 'Don't have an account? Sign Up.' "
-        "Fill in your name, email, and password, and you're done! You'll then be able to start exploring our amazing features."
-    ),
-    "Where can I find more information about your features?": (
-        "You can find detailed information about all our features on our <a href='https://agro-tech-ai.vercel.app' style='color: blue; text-decoration: underline;'>home page</a>. "
-        "This area provides insights into how each tool works and how it can benefit your farming practices."
-    )
-}
+from services.rag_service import get_rag_response
 
 _client = None
 
@@ -59,29 +16,62 @@ def get_client() -> Groq:
     return _client
 
 
-async def get_chat_response(user_prompt: str) -> str:
-    """Get a response from the chatbot."""
-    # Check premade requests first
-    if user_prompt in PREMADE_REQUESTS:
-        return PREMADE_REQUESTS[user_prompt]
+def _build_system_prompt(context: str = "", has_context: bool = False) -> str:
+    """Build the system prompt with optional RAG context."""
+    base_prompt = (
+        "You are Krishi-AI, an intelligent agricultural assistant for the Krishi-AI platform. "
+        "Your role is to help farmers and agricultural professionals with accurate, practical information "
+        "about farming practices, crop management, soil health, disease detection, and all Krishi-AI platform features.\n\n"
+        "Guidelines:\n"
+        "1. Be helpful, concise, and farmer-friendly\n"
+        "2. Provide specific, actionable advice when asked about farming practices\n"
+        "3. If asked about platform features, explain clearly how to access them\n"
+        "4. If you don't know something, say so honestly\n"
+        "5. Keep responses to 2-4 paragraphs unless more detail is requested\n"
+        "6. When discussing diseases, treatments, or farming practices, prioritize safe and sustainable methods\n"
+    )
 
-    # Use Groq LLM
+    if has_context and context:
+        base_prompt += (
+            "\n\n--- RELEVANT KNOWLEDGE BASE CONTEXT ---\n"
+            "The following information from the Krishi-AI knowledge base is relevant to the user's question. "
+            "Use it to provide accurate, platform-specific answers:\n\n"
+            f"{context}\n\n"
+            "--- END OF CONTEXT ---\n"
+        )
+
+    return base_prompt
+
+
+async def get_chat_response(user_prompt: str) -> Tuple[str, List[Dict], bool]:
+    """
+    Get a response from the chatbot using RAG.
+    
+    Returns:
+        Tuple of (response_text, sources_list, has_context_flag)
+    """
+    # Retrieve RAG context
+    context, sources = get_rag_response(user_prompt)
+    has_context = len(sources) > 0
+
+    # Build system prompt with context
+    system_prompt = _build_system_prompt(context, has_context)
+
     try:
         client = get_client()
         messages = [
-            {
-                "role": "system",
-                "content": "You are an AI assistant for AgroTech AI, an innovative platform that leverages artificial intelligence "
-                           "to enhance agricultural practices. Provide helpful and accurate information about AgroTech AI's services "
-                           "and agricultural technology."
-            },
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ]
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
-            messages=messages
+            messages=messages,
+            temperature=0.7,
+            max_tokens=1024,
         )
-        return response.choices[0].message.content
+        assistant_response = response.choices[0].message.content
+        return assistant_response, sources, has_context
+        
     except Exception as e:
         raise Exception(f"Groq API error: {str(e)}")
 

@@ -1,9 +1,13 @@
-# Crop & Soil Dashboard Implementation
+# RAG Agent Chatbot Implementation
 
 ## Steps
-1. ✅ Create CropDashboard.jsx component
-2. ✅ Create SoilDashboard.jsx component
-3. ✅ Update MainContent.jsx - Add routes
-4. ✅ Update Navbar.jsx - Add dropdown links
-5. ✅ Verify implementation
+- [x] Plan approved
+- [x] Create knowledge base directory with markdown docs
+- [x] Create RAG service (TF-IDF retrieval)
+- [x] Update chatbot schema with sources
+- [x] Update groq_client to support RAG
+- [x] Update chatbot router for RAG endpoint
+- [x] Update frontend ChatBot.jsx for RAG UX
+- [x] Register RAG chatbot in main.py (already registered as chatbot_router)
+- [x] All dependencies already in requirements.txt (scikit-learn, groq)
 
