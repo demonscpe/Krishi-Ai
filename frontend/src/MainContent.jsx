@@ -108,6 +108,8 @@ import NurserySearch from './components/models/NurserySearch';
 import NurseryOrders from './components/models/NurseryOrders';
 import NurseryInventory from './components/models/NurseryInventory';
 import NurseryDashboard from './components/models/NurseryDashboard';
+import CropHub from './components/models/CropDashboard';
+import SoilDashboard from './components/models/SoilDashboard';
 import NurseryProfile from './components/models/NurseryProfile';
 import { NurseryProvider } from './context/NurseryContext';
 
@@ -177,6 +179,8 @@ const MainContent = () => {
                 <Route path="/nursery/inventory" element={<ProtectedRoute><NurseryProvider><NurseryInventory /></NurseryProvider></ProtectedRoute>} />
                 <Route path="/nursery/dashboard" element={<ProtectedRoute><NurseryProvider><NurseryDashboard /></NurseryProvider></ProtectedRoute>} />
                 <Route path="/nursery/profile" element={<ProtectedRoute><NurseryProvider><NurseryProfile /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/crop/dashboard" element={<ProtectedRoute><CropHub /></ProtectedRoute>} />
+                <Route path="/soil/dashboard" element={<ProtectedRoute><SoilDashboard /></ProtectedRoute>} />
                 <Route path="/crop_recommendation" element={<ProtectedRoute><CropRotationRecommendation /></ProtectedRoute>} />
                 <Route path="/crop-identification" element={<ProtectedRoute><Cropidentification /></ProtectedRoute>} />
                 <Route path="/crop_Rotation_AI" element={<ProtectedRoute><CropRotationPlan /></ProtectedRoute>} />

@@ -98,19 +98,20 @@ const Navbar = () => {
     {
       key: "crop",
       label: "Crops",
-      paths: ["/crop", "/prices", "/crop-identification", "/crop_recommendation", "/crop_Rotation_AI"],
+      paths: ["/crop", "/prices", "/crop-identification", "/crop_recommendation", "/crop_Rotation_AI", "/crop/dashboard"],
       items: [
         { to: "/crop", label: "Crop Recommendation" },
         { to: "/crop_recommendation", label: "Rotation Recommendation" },
         { to: "/crop_Rotation_AI", label: "Crop Rotation" },
         { to: "/prices", label: "Price Prediction" },
         { to: "/crop-identification", label: "Crop Identification" },
+        { to: "/crop/dashboard", label: "Crop Dashboard" },
       ],
     },
     {
       key: "soil",
       label: "Soil",
-      paths: ["/fertilizer", "/soil", "/soil/image-analysis", "/soil/test-input", "/soil/health-analyzer", "/soil/fertilizer", "/soil/quality"],
+      paths: ["/fertilizer", "/soil", "/soil/image-analysis", "/soil/test-input", "/soil/health-analyzer", "/soil/fertilizer", "/soil/quality", "/soil/dashboard"],
       items: [
         { to: "/soil", label: "Soil Hub Dashboard" },
         { to: "/soil/image-analysis", label: "Soil Image Analysis" },
@@ -118,6 +119,7 @@ const Navbar = () => {
         { to: "/soil/health-analyzer", label: "Soil Health Analyzer" },
         { to: "/soil/fertilizer", label: "Fertilizer Recommendation" },
         { to: "/soil/quality", label: "Soil Quality Prediction" },
+        { to: "/soil/dashboard", label: "Soil Dashboard" },
         { to: "/fertilizer", label: "Fertilizer Prediction (Legacy)" },
       ],
     },
