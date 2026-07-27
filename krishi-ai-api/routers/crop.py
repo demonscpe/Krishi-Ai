@@ -36,6 +36,11 @@ async def crop_recommend(data: CropRecommendRequest):
     """Recommend a crop based on previous crop and soil data."""
     try:
         model = get_crop_recommendation_model()
+        if model is None:
+            # Fallback to croprecommendation module
+            from croprecommendation.service import recommend_crop
+            result = await recommend_crop(data.model_dump(by_alias=True))
+            return CropRecommendResponse(Recommended_Crop=result["Recommended Crop"])
 
         previous_crop_mapping = {
             'Groundnut': 1, 'Millets': 2, 'Wheat': 3, 'Maize': 4,
@@ -64,4 +69,3 @@ async def crop_recommend(data: CropRecommendRequest):
         return CropRecommendResponse(Recommended_Crop=crop)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-

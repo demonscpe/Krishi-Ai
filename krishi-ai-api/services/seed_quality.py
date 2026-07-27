@@ -17,6 +17,12 @@ async def predict_seed_quality(file_bytes: bytes, filename: str) -> dict:
 
     try:
         model = get_seed_quality_model()
+        if model is None:
+            return {
+                'class': 'unavailable',
+                'confidence': 0.0,
+                'error': 'Seed quality model not available'
+            }
 
         # Read image with PIL, convert to grayscale
         img = Image.open(temp_path).convert("L")

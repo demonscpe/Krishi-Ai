@@ -25,6 +25,9 @@ async def predict_disease(image_bytes: bytes) -> str | None:
     """Predict plant disease from an image using TFLite model."""
     try:
         interpreter = get_tflite_interpreter()
+        if interpreter is None:
+            return None  # Model not available — return None gracefully
+
         input_details = interpreter.get_input_details()
         output_details = interpreter.get_output_details()
 
