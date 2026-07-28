@@ -2,6 +2,7 @@
 import pickle
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Form
+from pydantic import BaseModel
 from config import MODEL_DIR
 from services.ml_models import get_mushroom_model, get_mushroom_encoders
 
@@ -45,6 +46,76 @@ MAPPINGS = {
     'spore-print-color': SPORE_PRINT_COLOR,
     'population': POPULATION, 'habitat': HABITAT
 }
+
+
+class MushroomRequest(BaseModel):
+    cap_shape: str
+    cap_surface: str
+    cap_color: str
+    bruises: str
+    odor: str
+    gill_attachment: str
+    gill_spacing: str
+    gill_size: str
+    gill_color: str
+    stalk_shape: str
+    stalk_root: str
+    stalk_surface_above_ring: str
+    stalk_surface_below_ring: str
+    stalk_color_above_ring: str
+    stalk_color_below_ring: str
+    veil_type: str
+    veil_color: str
+    ring_number: str
+    ring_type: str
+    spore_print_color: str
+    population: str
+    habitat: str
+
+
+def _predict_from_dict(form_data: dict) -> str:
+    data_dict = {}
+    for key, mapping in MAPPINGS.items():
+        value = form_data.get(key)
+        if value is None:
+            raise HTTPException(status_code=400, detail=f"Missing value: {key}")
+        mapped = mapping.get(value)
+        data_dict[key] = [mapped if mapped is not None else value]
+    df = pd.DataFrame(data_dict)
+    encoders = get_mushroom_encoders()
+    for col in df.columns:
+        if col in encoders:
+            df[col] = encoders[col].transform(df[col])
+    model = get_mushroom_model()
+    prediction = model.predict(df)
+    return "Edible" if prediction[0] == 1 else "Poisonous"
+
+
+@router.post("/predict")
+async def predict_mushroom(data: MushroomRequest):
+    """Predict mushroom edibility from JSON body."""
+    try:
+        form_data = {
+            'cap-shape': data.cap_shape, 'cap-surface': data.cap_surface,
+            'cap-color': data.cap_color, 'bruises': data.bruises, 'odor': data.odor,
+            'gill-attachment': data.gill_attachment, 'gill-spacing': data.gill_spacing,
+            'gill-size': data.gill_size, 'gill-color': data.gill_color,
+            'stalk-shape': data.stalk_shape, 'stalk-root': data.stalk_root,
+            'stalk-surface-above-ring': data.stalk_surface_above_ring,
+            'stalk-surface-below-ring': data.stalk_surface_below_ring,
+            'stalk-color-above-ring': data.stalk_color_above_ring,
+            'stalk-color-below-ring': data.stalk_color_below_ring,
+            'veil-type': data.veil_type, 'veil-color': data.veil_color,
+            'ring-number': data.ring_number, 'ring-type': data.ring_type,
+            'spore-print-color': data.spore_print_color,
+            'population': data.population, 'habitat': data.habitat,
+        }
+        edibility = _predict_from_dict(form_data)
+        return {"edibility": edibility, "prediction": edibility}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/edibility")

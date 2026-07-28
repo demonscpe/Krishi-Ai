@@ -1,10 +1,20 @@
 """Pydantic models for chatbot with RAG support."""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Optional, List
 
 
 class ChatRequest(BaseModel):
-    prompt: str = Field(..., min_length=1, max_length=2000)
+    prompt: Optional[str] = Field(None, min_length=1, max_length=2000)
+    message: Optional[str] = Field(None, min_length=1, max_length=2000)
+    user_id: Optional[str] = None
+
+    @model_validator(mode="after")
+    def resolve_prompt(self):
+        if not self.prompt and self.message:
+            self.prompt = self.message
+        if not self.prompt:
+            raise ValueError("Either 'prompt' or 'message' must be provided")
+        return self
 
 
 class SourceInfo(BaseModel):

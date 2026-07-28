@@ -7,32 +7,29 @@ from utils.rate_limiter import rate_limiter
 router = APIRouter(tags=["Chatbot"], prefix="/api")
 
 
-@router.post("/chatbot", response_model=ChatResponse)
-async def chatbot(request: Request, data: ChatRequest):
-    """Chat with the Krishi-AI RAG Agent assistant."""
-    # Rate limiting
+async def _handle_chat(request: Request, data: ChatRequest) -> ChatResponse:
     ip = request.client.host if request.client else "unknown"
     if rate_limiter.is_limited(ip):
         raise HTTPException(status_code=429, detail="Rate limit exceeded. Please wait and try again.")
-
     try:
         response_text, sources, has_context = await get_chat_response(data.prompt)
-        
-        # Convert sources to SourceInfo models
         source_infos = [
-            SourceInfo(
-                source=s["source"],
-                heading=s["heading"],
-                relevance=s["relevance"]
-            )
+            SourceInfo(source=s["source"], heading=s["heading"], relevance=s["relevance"])
             for s in sources
         ]
-        
-        return ChatResponse(
-            response=response_text,
-            sources=source_infos,
-            has_context=has_context,
-        )
+        return ChatResponse(response=response_text, sources=source_infos, has_context=has_context)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/chatbot", response_model=ChatResponse)
+async def chatbot(request: Request, data: ChatRequest):
+    """Chat with the Krishi-AI RAG Agent assistant."""
+    return await _handle_chat(request, data)
+
+
+@router.post("/chatbot/chat", response_model=ChatResponse)
+async def chatbot_chat(request: Request, data: ChatRequest):
+    """Chat with the Krishi-AI RAG Agent assistant (alias)."""
+    return await _handle_chat(request, data)
 

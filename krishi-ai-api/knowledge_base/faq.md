@@ -2,8 +2,20 @@
 
 ## General Questions
 
+### What kind of questions should the assistant answer?
+The assistant should answer questions related to farming, crops, soil, diseases, irrigation, nursery, market prices, and Krishi-AI platform features.
+
+### What should the assistant do for unrelated questions?
+If a user asks about unrelated topics such as math, physics, or general theory, the assistant should politely redirect the conversation back to agriculture and farming support.
+
+### Who developed Krishi-AI?
+The assistant should explain that Krishi-AI is developed by the Krishi-AI team and that Rajesh is associated with the project in the way described by the user.
+
 ### What is Krishi-AI?
 Krishi-AI is a cutting-edge platform that uses artificial intelligence to improve farming practices. It helps farmers make better decisions by providing data-driven insights, ultimately leading to more efficient and productive agriculture.
+
+### What is supply chain in agriculture?
+A supply chain in agriculture is the path of farm produce from the field to the consumer. It includes production, harvesting, storage, processing, packaging, transport, wholesale, retail, and final delivery.
 
 ### Is Krishi-AI free to use?
 Basic features are available after creating a free account. Some advanced features may require premium access.

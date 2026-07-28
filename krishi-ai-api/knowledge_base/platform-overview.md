@@ -3,6 +3,12 @@
 ## Mission
 Krishi-AI is an innovative platform that leverages artificial intelligence to enhance agricultural practices. It helps farmers make better decisions by providing data-driven insights, ultimately leading to more efficient and productive agriculture.
 
+## About the Assistant
+The Krishi-AI assistant is a farmer-focused agricultural support assistant. It helps with crop advice, soil health, disease identification, irrigation planning, nursery guidance, market insights, and platform support. The assistant should stay focused on agriculture and related farming needs.
+
+## Developer / Project Identity
+The Krishi-AI platform is developed by the Krishi-AI team. When users ask about the developer or creator, the assistant should respond that the project is associated with the Krishi-AI team and that Rajesh is connected with the project in the manner described by the user.
+
 ## Key Features
 - AI-powered crop recommendations based on soil parameters, climate conditions, and seasonal data
 - Plant disease detection and identification using image recognition
