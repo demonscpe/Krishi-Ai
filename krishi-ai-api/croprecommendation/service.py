@@ -87,10 +87,13 @@ def get_category_model(category: str):
 
 
 def get_rotation_model():
-    """Load crop rotation recommendation model."""
+    """Load crop rotation recommendation model (returns None if not available)."""
     key = "crop_rotation"
+    path = MODEL_DIR / "crop_rotation_recommendation_model.pkl"
+    if not path.exists():
+        return None
     if key not in _models:
-        _models[key] = joblib.load(MODEL_DIR / "crop_rotation_recommendation_model.pkl")
+        _models[key] = joblib.load(path)
     return _models[key]
 
 
@@ -187,12 +190,25 @@ Reply with ONLY the crop name from the list, nothing else."""
 # Crop Recommendation (Rotation)
 # ===========================
 
+# Rule-based fallback when the rotation model file is unavailable
+ROTATION_FALLBACK = {
+    "Rice": "Chickpea", "Wheat": "Soybean", "Maize": "Chickpea",
+    "Cotton": "Wheat", "Groundnut": "Wheat", "Sorghum": "Chickpea",
+    "Barley": "Mustard", "Millets": "Wheat",
+}
+
+
 async def recommend_crop(data: dict) -> dict:
     """Recommend a crop based on previous crop and soil data."""
     model = get_rotation_model()
+    prev_crop = data.get("Previous Crop", "")
+
+    # Graceful fallback when no trained rotation model is deployed
+    if model is None:
+        return {"Recommended Crop": ROTATION_FALLBACK.get(prev_crop, "Wheat")}
 
     input_data = pd.DataFrame([{
-        "Previous Crop": PREVIOUS_CROP_MAPPING.get(data.get("Previous Crop"), -1),
+        "Previous Crop": PREVIOUS_CROP_MAPPING.get(prev_crop, -1),
         "Soil Type": SOIL_TYPE_MAPPING.get(data.get("Soil Type"), -1),
         "Moisture Level": data.get("Moisture Level"),
         "Nitrogen (N)": data.get("Nitrogen (N)"),

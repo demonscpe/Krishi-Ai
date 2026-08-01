@@ -29,7 +29,6 @@ const Market = () => {
           </div>
 
           <div className="mt-6 flex gap-3">
-            <Link to="/AgroShop" className="px-4 py-2 rounded-xl bg-green-700 text-white">Go to AgroShop</Link>
             <Link to="/products" className="px-4 py-2 rounded-xl border border-gray-200">See Tools</Link>
           </div>
         </div>

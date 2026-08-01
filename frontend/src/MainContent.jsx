@@ -7,7 +7,6 @@ import Home from './pages/Home';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import Disease from './components/Disease';
-import Fertilizer from './mains/crop/Fertilizer';
 import SoilQuality from './mains/soil/SoilQuality';
 import SoilHub from './mains/soil/SoilHub';
 import SoilImageAnalysis from './mains/soil/SoilImageAnalysis';
@@ -29,9 +28,6 @@ import GovtSchemes from './mains/tools/GovtSchemes';
 import FarmerBenefits from './mains/tools/FarmerBenefits';
 // RAG Chatbot is now handled by the floating AiChatbot widget (imported below)
 import CropRotationRecommendation from './mains/crop/CropRotationRecommendation';
-import DiseaseRecognition from './mains/disease-recognition/DiseaseRecognition';
-import SugarcaneRecognition from './mains/disease-recognition/SugarcaneRecognition';
-import PaddyRecognition from './mains/disease-recognition/PaddyRecognition';
 import Preloader from "./components/PreLoader";
 import ProgressScrollDown from "./components/ProgressScrollDown";
 import CropRotationPlan from "./mains/crop/CropRotationPlan";
@@ -54,7 +50,6 @@ import Licensing from './components/Licensing';
 import Feedback from './components/Feedback';
 import SoilTestingCentres from './components/SoilTestingCenters';
 import NewsForum from './components/NewsForum';
-import ElectricalElectronicsShops from './components/ElectricalElectronicsShops';
 import DiscussionPage from './components/Discussions';
 //AgroRentAI
 import HeroSectionRent from './AgroRentAI/HeroSectionRent';
@@ -64,28 +59,13 @@ import RentCheckoutPage from './AgroRentAI/RentCheckoutPage';
 import RentCartPage from './AgroRentAI/Cart';
 import RentProductDetails from './AgroRentAI/RentProductDetails';
 import RentAdminDashboard from './AgroRentAI/RentAdminDashboard';
-//AgroShopAI
-import HomeShop from './AgroShopAI/pages/HomeShop';
-import ShopFooter from './AgroShopAI/components/ShopFooter';
-import CategoryPage from './AgroShopAI/pages/CategoryPage';
-import ProductPage from './AgroShopAI/pages/ProductPage';
 import BestPractices from './pages/BestPractices';
 import Profile from './components/Profile';
 import AgriProductListing from './AgroRentAI/components/AgriProductListing';
 import ProtectedRoute from './components/ProtectedRoute';
-import CartPage from './AgroShopAI/pages/Cart';
-import Wishlist from './AgroShopAI/pages/Wishlist';
-import ShopNavbar from './AgroShopAI/components/ShopNavbar';
-import ShopProfile from './AgroShopAI/pages/Profile';
-import SearchResult from './AgroShopAI/pages/SearchResult'
-import CancelAndReturnPolicy from './AgroShopAI/pages/FooterPages/CancelAndReturn';
-import TermsOfUse from './AgroShopAI/pages/FooterPages/TermsOfUse';
-import ShopPrivacyPolicy from './AgroShopAI/pages/FooterPages/Privacy';
-import GrievanceRedressal from './AgroShopAI/pages/FooterPages/Grievance';
 import ForgotPasswordPage from './components/ForgotPassword';
 import AccountVerificationPage from './components/EmailVerification';
 import OAuthSuccess from './components/OAuthSuccess';
-import FAQ from './AgroShopAI/pages/Faq';
 import GeminiChat from './mains/tools/GeminiChat';
 import ResendVerificationPage from './components/ResendVerification';
 import DiscussionForum from './components/DiscussionForum';
@@ -101,8 +81,6 @@ import DiseaseSeverity from './components/models/DiseaseSeverity';
 import TreatmentRecommendation from './components/models/TreatmentRecommendation';
 import DiseasePrevention from './components/models/DiseasePrevention';
 import DiseaseChatbot from './components/models/DiseaseChatbot';
-import DiseaseHistoryDashboard from './components/models/DiseaseHistoryDashboard';
-import DiseaseReport from './components/models/DiseaseReport';
 import { DiseaseProvider } from './context/DiseaseContext';
 
 // Nursery Platform
@@ -112,7 +90,6 @@ import NurseryOrders from './components/models/NurseryOrders';
 import NurseryInventory from './components/models/NurseryInventory';
 import NurseryDashboard from './components/models/NurseryDashboard';
 import CropHub from './components/models/CropDashboard';
-import SoilDashboard from './components/models/SoilDashboard';
 import NurseryProfile from './components/models/NurseryProfile';
 import { NurseryProvider } from './context/NurseryContext';
 
@@ -130,10 +107,8 @@ const MainContent = () => {
 
   const normalizePath = (path) => path.toLowerCase().replace(/^\/+|\/+$/g, '');
   const hideNavbarRoutes = ['navigateproducts', '404'];
-  const agroShopRoute = 'agroshop';
   const normalizedPath = normalizePath(location.pathname);
-  const hideNavbar = hideNavbarRoutes.includes(normalizedPath) || normalizedPath.startsWith(agroShopRoute);
-  const checkShop = normalizedPath.startsWith(agroShopRoute);
+  const hideNavbar = hideNavbarRoutes.includes(normalizedPath);
   return (
     <>
       {isPreloaderVisible ? (
@@ -145,7 +120,7 @@ const MainContent = () => {
             <AiChatbot />
             <ProgressScrollDown />
             <div>
-              {!hideNavbar ? <Navbar /> : <ShopNavbar />}
+              <Navbar />
               <Routes>
                 <Route path="/thank-you" element={<Feedback />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -156,7 +131,6 @@ const MainContent = () => {
                 <Route path="/about" element={<About />} />
                 <Route path="/crop" element={<ProtectedRoute><Crop /></ProtectedRoute>} />
                 <Route path="/water-management" element={<ProtectedRoute><WaterManagement /></ProtectedRoute>} />
-                <Route path="/fertilizer" element={<ProtectedRoute><Fertilizer /></ProtectedRoute>} />
                 {/* Soil Hub */}
                 <Route path="/soil" element={<ProtectedRoute><SoilHub /></ProtectedRoute>} />
                 <Route path="/soil/image-analysis" element={<ProtectedRoute><SoilImageAnalysis /></ProtectedRoute>} />
@@ -172,8 +146,6 @@ const MainContent = () => {
                 <Route path="/disease/treatment" element={<ProtectedRoute><DiseaseProvider><TreatmentRecommendation /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/prevention" element={<ProtectedRoute><DiseaseProvider><DiseasePrevention /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/chatbot" element={<ProtectedRoute><DiseaseProvider><DiseaseChatbot /></DiseaseProvider></ProtectedRoute>} />
-                <Route path="/disease/history" element={<ProtectedRoute><DiseaseProvider><DiseaseHistoryDashboard /></DiseaseProvider></ProtectedRoute>} />
-                <Route path="/disease/report" element={<ProtectedRoute><DiseaseProvider><DiseaseReport /></DiseaseProvider></ProtectedRoute>} />
                 {/* Nursery Hub */}
                 <Route path="/nursery" element={<ProtectedRoute><NurseryProvider><NurseryHub /></NurseryProvider></ProtectedRoute>} />
                 <Route path="/nursery/search" element={<ProtectedRoute><NurseryProvider><NurserySearch /></NurseryProvider></ProtectedRoute>} />
@@ -182,7 +154,6 @@ const MainContent = () => {
                 <Route path="/nursery/dashboard" element={<ProtectedRoute><NurseryProvider><NurseryDashboard /></NurseryProvider></ProtectedRoute>} />
                 <Route path="/nursery/profile" element={<ProtectedRoute><NurseryProvider><NurseryProfile /></NurseryProvider></ProtectedRoute>} />
                 <Route path="/crop/dashboard" element={<ProtectedRoute><CropHub /></ProtectedRoute>} />
-                <Route path="/soil/dashboard" element={<ProtectedRoute><SoilDashboard /></ProtectedRoute>} />
                 <Route path="/crop_recommendation" element={<ProtectedRoute><CropRotationRecommendation /></ProtectedRoute>} />
                 <Route path="/crop-identification" element={<ProtectedRoute><Cropidentification /></ProtectedRoute>} />
                 <Route path="/crop_Rotation_AI" element={<ProtectedRoute><CropRotationPlan /></ProtectedRoute>} />
@@ -194,10 +165,7 @@ const MainContent = () => {
                 <Route path="/soiltestingcentres" element={<SoilTestingCentres />} />
                 <Route path="/TaskReminder" element={<ProtectedRoute><TaskReminder /></ProtectedRoute>} />
                 <Route path="/GeminiChat" element={<ProtectedRoute><GeminiChat /></ProtectedRoute>} />
-                <Route path="/SugarcaneRecognition" element={<ProtectedRoute><SugarcaneRecognition /></ProtectedRoute>} />
-                <Route path="/PaddyRecognition" element={<ProtectedRoute><PaddyRecognition /></ProtectedRoute>} />
-                <Route path="/DiseaseRecognition" element={<ProtectedRoute><DiseaseRecognition /></ProtectedRoute>} />
-<Route path="/PlantTaskReminder" element={<ProtectedRoute><PlantTaskReminder /></ProtectedRoute>} />
+                <Route path="/PlantTaskReminder" element={<ProtectedRoute><PlantTaskReminder /></ProtectedRoute>} />
                 <Route path="/npk-calculator" element={<ProtectedRoute><NPKCalculator /></ProtectedRoute>} />
                 <Route path="/govt-schemes" element={<ProtectedRoute><GovtSchemes /></ProtectedRoute>} />
                 <Route path="/farmer-benefits" element={<ProtectedRoute><FarmerBenefits /></ProtectedRoute>} />
@@ -217,7 +185,6 @@ const MainContent = () => {
                 <Route path="/terms" element={<TermsAndConditions />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
                 <Route path="/news" element={<NewsForum />} />
-                <Route path="/ee-shops" element={<ElectricalElectronicsShops />} />
                 <Route path="/BestPractices" element={<BestPractices />} />
                 <Route path="/DiscussionPage" element={<DiscussionPage />} />
                 {/* AgroRentAI Routes */}
@@ -230,25 +197,10 @@ const MainContent = () => {
                 <Route path="/RentAdminDashboard" element={<RentAdminDashboard />} />
                 <Route path="/RentUserDashboard" element={<ProtectedRoute><RentUserDashboard /></ProtectedRoute>} />
                 <Route path="/RentSupport" element={<RentSupportPage />} />
-                {/* AgroShopAI Routes */}
-                <Route path="/pesticides-shop" element={<HomeShop />} />
-                <Route path="/AgroShop" element={<HomeShop />} />
-                <Route path="/AgroShop/Category" element={<CategoryPage />} />
-                <Route path="/AgroShop/Category/:name" element={<CategoryPage />} />
-                <Route path="/AgroShop/Product/:id" element={<ProductPage />} />
-                <Route path="/AgroShop/Cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
-                <Route path="/AgroShop/Wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
-                <Route path="/AgroShop/Profile" element={<ProtectedRoute><ShopProfile /></ProtectedRoute>} />
-                <Route path="/AgroShop/search" element={<SearchResult />} />
-                <Route path="/AgroShop/cancellation-return" element={<CancelAndReturnPolicy />} />
-                <Route path="/AgroShop/terms-of-use" element={<TermsOfUse />} />
-                <Route path="/AgroShop/privacy-policy" element={<ShopPrivacyPolicy />} />
-                <Route path="/AgroShop/faq" element={<FAQ />} />
-                <Route path="/AgroShop/grievance" element={<GrievanceRedressal />} />
                 <Route path="/discussion" element={<DiscussionForum />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-              {checkShop ? <ShopFooter /> : <Footer />}
+              <Footer />
             </div>
           </AuthProvider>
         </div>

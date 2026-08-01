@@ -22,39 +22,45 @@ try {
   // ignore
 }
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
-      proxy: true,
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        let user = await User.findOne({ googleId: profile.id });
+// Only register Google OAuth when credentials are configured (graceful dev fallback)
+if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: GOOGLE_CLIENT_ID,
+        clientSecret: GOOGLE_CLIENT_SECRET,
+        callbackURL: "/api/auth/google/callback",
+        proxy: true,
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          let user = await User.findOne({ googleId: profile.id });
 
-        if (!user) {
-          const email = profile.emails?.[0]?.value || null;
+          if (!user) {
+            const email = profile.emails?.[0]?.value || null;
 
-          user = await User.create({
-            googleId: profile.id,
-            firstName: profile.name?.givenName || "",
-            lastName: profile.name?.familyName || "",
-            email,
-            username: `${email?.split("@")[0] || "user"}_${Date.now()}`,
-            profilePicture: profile.photos?.[0]?.value,
-            isVerified: true,
-            password: null,
-          });
+            user = await User.create({
+              googleId: profile.id,
+              firstName: profile.name?.givenName || "",
+              lastName: profile.name?.familyName || "",
+              email,
+              username: `${email?.split("@")[0] || "user"}_${Date.now()}`,
+              profilePicture: profile.photos?.[0]?.value,
+              isVerified: true,
+              password: null,
+            });
+          }
+
+          return done(null, user);
+        } catch (err) {
+          return done(err, null);
         }
-
-        return done(null, user);
-      } catch (err) {
-        return done(err, null);
       }
-    }
-  )
-);
+    )
+  );
+} else {
+  // eslint-disable-next-line no-console
+  console.log("🔓 Google OAuth skipped — GOOGLE_CLIENT_ID / SECRET not configured.");
+}
 
 module.exports = passport;

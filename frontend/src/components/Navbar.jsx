@@ -35,10 +35,9 @@ const Navbar = () => {
 
   const protectedPaths = new Set([
     '/chatbot', '/crop', '/crop_recommendation', '/crop_Rotation_AI',
-    '/crop-identification', '/water-management', '/fertilizer', '/soil',
-    '/disease', '/TaskReminder', '/GeminiChat', '/SugarcaneRecognition',
-    '/PaddyRecognition', '/DiseaseRecognition', '/PlantTaskReminder',
-    '/Climate', '/nursery', '/nursery/search', '/nursery/orders',
+    '/crop-identification', '/water-management', '/soil',
+    '/disease', '/TaskReminder', '/GeminiChat',
+    '/PlantTaskReminder', '/Climate', '/nursery', '/nursery/search', '/nursery/orders',
     '/nursery/inventory', '/nursery/dashboard', '/nursery/profile',
   ]);
 
@@ -111,7 +110,7 @@ const Navbar = () => {
     {
       key: "soil",
       label: "Soil",
-      paths: ["/fertilizer", "/soil", "/soil/image-analysis", "/soil/test-input", "/soil/health-analyzer", "/soil/fertilizer", "/soil/quality", "/soil/dashboard"],
+      paths: ["/soil", "/soil/image-analysis", "/soil/test-input", "/soil/health-analyzer", "/soil/fertilizer", "/soil/quality"],
       items: [
         { to: "/soil", label: "Soil Hub Dashboard" },
         { to: "/soil/image-analysis", label: "Soil Image Analysis" },
@@ -119,14 +118,12 @@ const Navbar = () => {
         { to: "/soil/health-analyzer", label: "Soil Health Analyzer" },
         { to: "/soil/fertilizer", label: "Fertilizer Recommendation" },
         { to: "/soil/quality", label: "Soil Quality Prediction" },
-        { to: "/soil/dashboard", label: "Soil Dashboard" },
-        { to: "/fertilizer", label: "Fertilizer Prediction (Legacy)" },
       ],
     },
     {
       key: "disease",
       label: "Disease",
-      paths: ["/disease", "/SugarcaneRecognition", "/PaddyRecognition", "/DiseaseRecognition"],
+      paths: ["/disease"],
       items: [
         { to: "/disease", label: "Disease Hub" },
         { to: "/disease/identify", label: "Plant Identification" },
@@ -135,12 +132,6 @@ const Navbar = () => {
         { to: "/disease/treatment", label: "Treatment" },
         { to: "/disease/prevention", label: "Prevention Guide" },
         { to: "/disease/chatbot", label: "AI Plant Doctor" },
-        { to: "/disease/history", label: "History" },
-        { to: "/disease/report", label: "Disease Report" },
-        { to: "__separator__", label: "", separator: true },
-        { to: "/SugarcaneRecognition", label: "Sugarcane Engine" },
-        { to: "/PaddyRecognition", label: "Paddy Engine" },
-        { to: "/DiseaseRecognition", label: "Combined Engine" },
       ],
     },
     {
@@ -173,12 +164,11 @@ const Navbar = () => {
     {
       key: "help",
       label: "Help",
-      paths: ["/Climate", "/news", "/soiltesting", "/ee-shops", "/BestPractices", "/DiscussionPage", "/discussion"],
+      paths: ["/Climate", "/news", "/soiltesting", "/BestPractices", "/DiscussionPage", "/discussion"],
       items: [
         { to: "/Climate", label: "Climate" },
         { to: "/news", label: "News" },
         { to: "/soiltestingcentres", label: "Soil Testing Centers" },
-        { to: "/ee-shops", label: "EE Shops" },
         { to: "/BestPractices", label: "Best Practices" },
         { to: "/DiscussionPage", label: "Discussions" },
         { to: "/discussion", label: "Discussion Forum" },
@@ -253,9 +243,9 @@ const Navbar = () => {
               )}
             </div>
           ))}
-          <NavLink to="/pesticides-shop" className={navLinkClass} onClick={closeAll}>
-            Pesticides Shop
-          </NavLink>
+                                <NavLink to="/market" className={navLinkClass} onClick={closeAll}>
+                                  Market
+                                </NavLink>
         </div>
 
         <div className="hidden lg:flex items-center gap-4">
@@ -325,9 +315,9 @@ const Navbar = () => {
               </div>
             ))}
 
-            <NavLink to="/pesticides-shop" onClick={closeAll}
+            <NavLink to="/market" onClick={closeAll}
               className={({ isActive }) => `block px-3 py-2.5 rounded-lg text-[14px] font-semibold ${isActive ? "bg-green-50 text-green-700" : "text-gray-700 hover:bg-gray-50"}`}>
-              Pesticides Shop
+              Market
             </NavLink>
 
             <div className="pt-3 mt-3 border-t border-gray-100 space-y-2">

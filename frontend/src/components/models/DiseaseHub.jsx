@@ -14,9 +14,9 @@ const modules = [
 ];
 
 const quickLinks = [
-  { path: '/SugarcaneRecognition', label: 'Sugarcane Disease', desc: 'Specialized engine for sugarcane' },
-  { path: '/PaddyRecognition', label: 'Paddy Disease', desc: 'Specialized engine for paddy' },
-  { path: '/DiseaseRecognition', label: 'Combined Engine', desc: '14+ species, 38+ disease classes' },
+  { path: '/disease/detect', label: 'Disease Detection', desc: 'Detect and classify plant diseases with AI' },
+  { path: '/disease/severity', label: 'Severity Assessment', desc: 'Assess disease severity and affected area percentage' },
+  { path: '/disease/treatment', label: 'Treatment', desc: 'Get chemical and organic treatment recommendations' },
 ];
 
 export default function DiseaseHub() {
@@ -71,7 +71,7 @@ export default function DiseaseHub() {
         <div className="mt-12 bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 shadow-sm">
           <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
             <Leaf className="text-emerald-600" size={20} />
-            Existing Specialized Engines
+            Quick Actions
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
             {quickLinks.map((link) => (

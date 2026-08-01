@@ -28,12 +28,12 @@ def create_app() -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         # Startup: models are loaded lazily on first use
-        print("🚀 Krishi-AI FastAPI starting up...")
+        print("[Krishi-AI] FastAPI starting up...")
         yield
         # Shutdown: clear model cache
         from services.ml_models import clear_models
         clear_models()
-        print("👋 Krishi-AI FastAPI shutting down...")
+        print("[Krishi-AI] FastAPI shutting down...")
 
     app = FastAPI(
         title="Krishi-AI Unified API",

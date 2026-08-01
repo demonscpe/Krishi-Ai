@@ -48,6 +48,8 @@ class CropRecommendRequest(BaseModel):
 class CropRecommendResponse(BaseModel):
     Recommended_Crop: str = Field(..., alias="Recommended Crop")
 
+    model_config = {"populate_by_name": True}
+
 
 class AccuracyMetrics(BaseModel):
     category: str

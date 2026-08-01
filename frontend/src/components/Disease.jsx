@@ -94,7 +94,7 @@ export default function PlantDiseaseDetection() {
                     <span className="text-slate-400 text-[10px] font-medium italic">Verified AI</span>
                   </div>
                   <Link 
-                    to={`/${crop}Recognition`}
+                    to="/disease"
                     className="bg-slate-900 text-white px-5 py-2 rounded-lg text-[11px] font-bold hover:bg-emerald-600 transition-colors shadow-md"
                   >
                     Launch
@@ -137,7 +137,7 @@ export default function PlantDiseaseDetection() {
                   Supports 14+ species with a custom-trained CNN to detect 38+ disease classes.
                 </p>
                 <Link 
-                  to="/DiseaseRecognition"
+                  to="/disease"
                   className="inline-flex items-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-[11px] font-bold hover:bg-emerald-700 transition-all shadow-md"
                 >
                   <Zap size={12} fill="currentColor" />
