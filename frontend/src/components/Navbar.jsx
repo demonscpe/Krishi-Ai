@@ -108,9 +108,9 @@ const Navbar = () => {
       ],
     },
     {
-      key: "soil",
+key: "soil",
       label: "Soil",
-      paths: ["/soil", "/soil/image-analysis", "/soil/test-input", "/soil/health-analyzer", "/soil/fertilizer", "/soil/quality"],
+      paths: ["/soil", "/soil/image-analysis", "/soil/test-input", "/soil/health-analyzer", "/soil/fertilizer", "/soil/quality", "/soil/detection", "/soil/health-analysis", "/soil/health-rating", "/soil/visual-analysis"],
       items: [
         { to: "/soil", label: "Soil Hub Dashboard" },
         { to: "/soil/image-analysis", label: "Soil Image Analysis" },
@@ -118,6 +118,10 @@ const Navbar = () => {
         { to: "/soil/health-analyzer", label: "Soil Health Analyzer" },
         { to: "/soil/fertilizer", label: "Fertilizer Recommendation" },
         { to: "/soil/quality", label: "Soil Quality Prediction" },
+        { to: "/soil/detection", label: "Soil Detection (Vision)" },
+        { to: "/soil/health-analysis", label: "Soil Health Analysis (Vision)" },
+        { to: "/soil/health-rating", label: "Soil Health Rating (Vision)" },
+        { to: "/soil/visual-analysis", label: "Soil Visual Analysis (Vision)" },
       ],
     },
     {

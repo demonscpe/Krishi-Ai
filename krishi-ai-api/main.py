@@ -104,6 +104,7 @@ def create_app() -> FastAPI:
     from soil_test_input.router import router as soil_test_input_router
     from soil_health_analyzer.router import router as soil_health_analyzer_router
     from fertilizer_recommendation.router import router as fertilizer_recommendation_router
+    from soil_vision.router import router as soil_vision_router
 
     # Consolidated crop recommendation endpoints:
     #   POST /api/croprecommendation/predict   — Predict best crop from soil params
@@ -119,6 +120,7 @@ def create_app() -> FastAPI:
     app.include_router(soil_test_input_router)       # POST /api/soil-test, POST /api/soil-test/ocr
     app.include_router(soil_health_analyzer_router)  # POST /api/soil-health
     app.include_router(fertilizer_recommendation_router)  # POST /api/fertilizer-recommendation
+    app.include_router(soil_vision_router)             # POST /api/soil-vision/analyze, POST /api/soil-vision/chat
     
     # Disease Intelligence Platform routers
     app.include_router(plant_identification_router)  # POST /api/plant-identification

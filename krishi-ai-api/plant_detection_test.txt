@@ -1,0 +1,17 @@
+=== PLANT DETECTION TEST START ===
+IMPORT main OK
+Plant routes: ['/api/plant-identification']
+POST /api/plant-identification -> 200
+Response JSON: {'plant': 'Tomato', 'confidence': 97.5, 'common_name': 'Tomato', 'scientific_name': 'Solanum lycopersicum', 'family': 'Solanaceae', 'description': 'A widely cultivated garden vegetable.', 'health_status': 'Diseased', 'disease': 'Early Blight', 'disease_confidence': 88.2, 'symptoms': 'Brown spots on lower leaves with concentric rings.', 'remedy': 'Remove affected leaves and apply neem oil.', 'source': 'Test'}
+✅ Response schema correct (plant, disease, health_status)
+POST invalid type -> 400
+✅ Invalid file type rejected with 400
+POST empty -> 422
+
+ALL PLANT DETECTION ROUTE TESTS PASSED ✅
+
+=== SERVICE FALLBACK TEST ===
+Fallback result: {'plant': 'Cotton', 'confidence': 90.2, 'common_name': 'Cotton', 'scientific_name': 'Gossypium hirsutum', 'family': 'Malvaceae', 'description': 'A soft, fluffy fiber that grows in a boll, used for textiles.', 'health_status': 'Unknown', 'disease': '', 'disease_confidence': None, 'symptoms': '', 'remedy': '', 'source': 'Local Database'}
+✅ Service fallback to Local Database works
+
+ALL PLANT DETECTION TESTS PASSED ✅✅

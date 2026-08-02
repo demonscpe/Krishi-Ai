@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Camera, FileText, Activity, Sprout, 
   Leaf, ArrowRight, Sparkles, CheckCircle2,
-  Droplets, Thermometer, Beaker, Shield
+  Droplets, Thermometer, Beaker, Shield,
+  Search, Heart, Star, Eye
 } from 'lucide-react';
 import bgHero from "../../assets/bgHero.png";
 
@@ -56,7 +57,7 @@ const soilModules = [
     path: '/soil/fertilizer',
     features: ['Crop-specific plans', 'Quantity per acre', 'Organic options'],
   },
-  {
+{
     id: 'quality',
     title: 'Soil Quality Prediction',
     description: 'Predict overall soil quality class and fertility score from lab parameters.',
@@ -67,6 +68,54 @@ const soilModules = [
     lightText: 'text-green-600',
     path: '/soil/quality',
     features: ['Quality classification', 'Fertility scoring', 'Crop suggestions'],
+  },
+  {
+    id: 'detection',
+    title: 'Soil Detection (Vision)',
+    description: 'Identify soil types (sandy, loam, clay, silt, chalky, peaty) with crop suitability from a photo.',
+    icon: Search,
+    color: 'bg-amber-500',
+    gradient: 'from-amber-600 to-amber-700',
+    lightBg: 'bg-amber-50',
+    lightText: 'text-amber-600',
+    path: '/soil/detection',
+    features: ['Soil type classification', 'Texture & mineral properties', 'Crop suitability list'],
+  },
+  {
+    id: 'health-analysis',
+    title: 'Soil Health Analysis (Vision)',
+    description: 'Get a full soil profile — type, color, texture, health, and next steps from a photo.',
+    icon: Heart,
+    color: 'bg-blue-500',
+    gradient: 'from-blue-600 to-blue-700',
+    lightBg: 'bg-blue-50',
+    lightText: 'text-blue-600',
+    path: '/soil/health-analysis',
+    features: ['Soil type & color', 'Texture & health', 'Confidence & crop suitability'],
+  },
+  {
+    id: 'health-rating',
+    title: 'Soil Health Rating (Vision)',
+    description: 'Assess visible structure, organic matter, compaction, and biological indicators via AI vision.',
+    icon: Star,
+    color: 'bg-emerald-500',
+    gradient: 'from-emerald-600 to-emerald-700',
+    lightBg: 'bg-emerald-50',
+    lightText: 'text-emerald-600',
+    path: '/soil/health-rating',
+    features: ['Structure analysis', 'Organic matter indicators', 'Excellent-to-Poor rating'],
+  },
+  {
+    id: 'visual-analysis',
+    title: 'Soil Visual Analysis (Vision)',
+    description: 'Analyze color, texture, moisture, erosion risk, and tillage recommendations from a soil image.',
+    icon: Eye,
+    color: 'bg-rose-500',
+    gradient: 'from-rose-600 to-rose-700',
+    lightBg: 'bg-rose-50',
+    lightText: 'text-rose-600',
+    path: '/soil/visual-analysis',
+    features: ['Color & texture', 'Moisture estimation', 'Erosion risk & tillage advice'],
   },
 ];
 

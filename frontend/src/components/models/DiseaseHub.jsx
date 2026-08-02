@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, Bug, Activity, Pill, Shield, Bot, FileText, BarChart3, Leaf, ArrowRight } from 'lucide-react';
 
 const modules = [
-  { path: '/disease/identify', icon: Search, label: 'Plant Identification', desc: 'Identify plant species from leaf, fruit, or stem images', color: 'from-emerald-500 to-emerald-600', shadow: 'shadow-emerald-100' },
+  { path: '/disease/identify', icon: Search, label: 'Plant Detection', desc: 'Identify plant species, detect diseases, and get remedies from photos', color: 'from-emerald-500 to-emerald-600', shadow: 'shadow-emerald-100' },
   { path: '/disease/detect', icon: Bug, label: 'Disease Detection', desc: 'Detect and classify plant diseases with AI', color: 'from-red-500 to-red-600', shadow: 'shadow-red-100' },
   { path: '/disease/severity', icon: Activity, label: 'Severity Assessment', desc: 'Assess disease severity and affected area percentage', color: 'from-orange-500 to-orange-600', shadow: 'shadow-orange-100' },
   { path: '/disease/treatment', icon: Pill, label: 'Treatment', desc: 'Get chemical and organic treatment recommendations', color: 'from-blue-500 to-blue-600', shadow: 'shadow-blue-100' },

@@ -13,6 +13,10 @@ import SoilImageAnalysis from './mains/soil/SoilImageAnalysis';
 import SoilTestInput from './mains/soil/SoilTestInput';
 import SoilHealthAnalyzer from './mains/soil/SoilHealthAnalyzer';
 import SoilFertilizerRecommendation from './mains/soil/SoilFertilizerRecommendation';
+import SoilDetection from './mains/soil/SoilDetection';
+import SoilHealthAnalysis from './mains/soil/SoilHealthAnalysis';
+import SoilHealthRating from './mains/soil/SoilHealthRating';
+import SoilVisualAnalysis from './mains/soil/SoilVisualAnalysis';
 import Footer from './components/Footer';
 import GoTop from './components/GoTop';
 import NotFound from './NotFound';
@@ -138,6 +142,10 @@ const MainContent = () => {
                 <Route path="/soil/health-analyzer" element={<ProtectedRoute><SoilHealthAnalyzer /></ProtectedRoute>} />
                 <Route path="/soil/fertilizer" element={<ProtectedRoute><SoilFertilizerRecommendation /></ProtectedRoute>} />
                 <Route path="/soil/quality" element={<ProtectedRoute><SoilQuality /></ProtectedRoute>} />
+                <Route path="/soil/detection" element={<ProtectedRoute><SoilDetection /></ProtectedRoute>} />
+                <Route path="/soil/health-analysis" element={<ProtectedRoute><SoilHealthAnalysis /></ProtectedRoute>} />
+                <Route path="/soil/health-rating" element={<ProtectedRoute><SoilHealthRating /></ProtectedRoute>} />
+                <Route path="/soil/visual-analysis" element={<ProtectedRoute><SoilVisualAnalysis /></ProtectedRoute>} />
                 {/* Disease Hub */}
                 <Route path="/disease" element={<ProtectedRoute><DiseaseProvider><DiseaseHub /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/identify" element={<ProtectedRoute><DiseaseProvider><PlantIdentification /></DiseaseProvider></ProtectedRoute>} />

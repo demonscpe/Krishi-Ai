@@ -8,10 +8,15 @@ export default defineConfig({
     proxy: {
       '/gradio-api': {
         target: 'https://selva1909-crop-prediction.hf.space',
-        changeOrigin: true, // rewrites the Host header so the Space sees a same-site request
-        ws: true,           // Gradio uses SSE/websockets for streaming updates
+        changeOrigin: true,
+        ws: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/gradio-api/, ''),
+      },
+      // Proxy API requests to FastAPI backend during development
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
       },
     },
   },
