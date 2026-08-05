@@ -43,7 +43,7 @@ export default function TreatmentRecommendation() {
     <div className="min-h-screen bg-[#f7faf8] pt-20 sm:pt-24 font-sans">
       <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-14 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-7xl">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl flex items-center gap-3">
+          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl flex flex-wrap items-center gap-2 sm:gap-3 leading-tight">
             <Pill className="text-lime-300" /> Treatment Recommendation
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-emerald-50/80">

@@ -107,7 +107,7 @@ export default function PlantIdentification() {
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-100">
               <Sparkles size={14} className="text-lime-300" /> Module 1
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl leading-tight">
               Plant Detection <span className="text-lime-300">&amp; Health</span>
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-emerald-50/80">
@@ -142,7 +142,7 @@ export default function PlantIdentification() {
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
               onClick={() => fileInputRef.current?.click()}
-              className="relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-10 transition hover:border-emerald-400 hover:bg-emerald-50/30"
+              className="relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 sm:p-10 transition hover:border-emerald-400 hover:bg-emerald-50/30"
             >
               {previews.length > 0 ? (
                 <div className="relative w-full max-w-sm">

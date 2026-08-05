@@ -33,7 +33,7 @@ export default function DiseaseHub() {
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-100">
               <Leaf size={14} className="text-lime-300" /> AI Plant Disease Intelligence
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl leading-tight">
               Protect your crops with AI-powered disease insights.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-emerald-50/80 sm:text-lg">
@@ -59,7 +59,7 @@ export default function DiseaseHub() {
                 </div>
                 <h3 className="text-lg font-bold text-slate-800 mb-1">{mod.label}</h3>
                 <p className="text-sm text-slate-500 leading-relaxed">{mod.desc}</p>
-                <div className="mt-4 flex items-center gap-1 text-xs font-bold text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="mt-4 flex items-center gap-1 text-xs font-bold text-emerald-600 transition-all group-hover:gap-2">
                   Open <ArrowRight size={14} />
                 </div>
               </button>

@@ -17,7 +17,7 @@ const nurseryModules = [
     gradient: 'from-green-600 to-green-700',
     lightBg: 'bg-green-50',
     lightText: 'text-green-600',
-    path: '/nursery/search',
+path: '/nursery/marketplace',
     features: ['Nearby nursery finder', 'Plant search', 'GPS location detection'],
   },
   {

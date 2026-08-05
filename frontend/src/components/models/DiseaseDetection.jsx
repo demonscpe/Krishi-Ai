@@ -63,7 +63,7 @@ export default function DiseaseDetection() {
       <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-14 sm:px-6 sm:py-16">
         <div className="absolute inset-0 -z-10 bg-[url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=1920')] bg-cover bg-center opacity-15" />
         <div className="mx-auto max-w-7xl">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl flex items-center gap-3">
+          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl flex flex-wrap items-center gap-2 sm:gap-3 leading-tight">
             <Bug className="text-lime-300" /> Disease Detection
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-emerald-50/80">
@@ -91,7 +91,7 @@ export default function DiseaseDetection() {
               onClick={() => document.getElementById('disease-img-input')?.click()}
               onDrop={(e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); }}
               onDragOver={(e) => e.preventDefault()}
-              className="relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 transition hover:border-emerald-400 hover:bg-emerald-50/30"
+              className="relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 sm:p-8 transition hover:border-emerald-400 hover:bg-emerald-50/30"
             >
               {preview ? (
                 <div className="relative">

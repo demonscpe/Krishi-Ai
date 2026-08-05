@@ -4,41 +4,58 @@ const nurseryController = require('./nursery.controller');
 const verifyToken = require('../../middleware/auth.middleware');
 const roleMiddleware = require('../../middleware/role.middleware');
 
-// --- Public / Search routes ---
-// GET /api/nursery/plants/search?query=&lat=&lng= — search plants (anyone)
+// ============================================================
+// PUBLIC ROUTES (browsing / searching — no auth required)
+// ============================================================
+router.get('/search', nurseryController.executeSearch);
+router.get('/suggestions', nurseryController.searchSuggestions);
+router.get('/smart-search', nurseryController.smartSearch);
+router.get('/home', nurseryController.getHomeFeed);
+router.get('/categories', nurseryController.getCropCategories);
+router.get('/crops', nurseryController.getCropsByCategory);
+router.get('/crops/:id', nurseryController.getCropDetails);
+router.get('/map', nurseryController.getMapData);
+router.get('/reviews/:id', nurseryController.getReviews);
+router.get('/detail/:id', nurseryController.getNurseryDetail);
 router.get('/plants/search', nurseryController.searchPlants);
 
-// GET /api/nursery/detail/:id — public nursery detail
-router.get('/detail/:id', nurseryController.getNurseryDetail);
+// ============================================================
+// SEED ROUTE (populate demo data — dev/demo)
+// ============================================================
+router.post('/seed', nurseryController.seedDatabase);
 
-// --- Farmer routes ---
-// POST /api/nursery/orders — create order
+// ============================================================
+// FARMER ROUTES (authenticated)
+// ============================================================
 router.post('/orders', verifyToken, roleMiddleware(['farmer']), nurseryController.createOrder);
-
-// GET /api/nursery/orders — farmer's order history
 router.get('/orders', verifyToken, nurseryController.getOrders);
+router.post('/reviews', verifyToken, roleMiddleware(['farmer']), nurseryController.addReview);
+router.post('/wishlist', verifyToken, nurseryController.toggleWishlist);
+router.get('/wishlist', verifyToken, nurseryController.getWishlist);
+router.get('/recommendations', verifyToken, roleMiddleware(['farmer']), nurseryController.getAIRecommendations);
+router.post('/chat', verifyToken, nurseryController.getOrCreateChat);
+router.post('/chat/:id/message', verifyToken, nurseryController.sendMessage);
 
-// --- Nursery owner routes ---
-// POST /api/nursery/register — register nursery profile
+// ============================================================
+// NURSERY OWNER ROUTES
+// ============================================================
 router.post('/register', verifyToken, roleMiddleware(['nursery']), nurseryController.registerNursery);
-
-// GET /api/nursery/profile
 router.get('/profile', verifyToken, roleMiddleware(['nursery']), nurseryController.getProfile);
-
-// PUT /api/nursery/profile
 router.put('/profile', verifyToken, roleMiddleware(['nursery']), nurseryController.updateProfile);
-
-// CRUD plants (nursery owner)
+router.put('/profile/extended', verifyToken, roleMiddleware(['nursery']), nurseryController.updateNurseryProfile);
 router.get('/plants', verifyToken, roleMiddleware(['nursery']), nurseryController.getMyPlants);
 router.post('/plants', verifyToken, roleMiddleware(['nursery']), nurseryController.addPlant);
+router.post('/crops', verifyToken, roleMiddleware(['nursery']), nurseryController.addCrop);
 router.put('/plants/:id', verifyToken, roleMiddleware(['nursery']), nurseryController.updatePlant);
 router.delete('/plants/:id', verifyToken, roleMiddleware(['nursery']), nurseryController.deletePlant);
-
-// Order management (nursery)
 router.put('/orders/:id', verifyToken, roleMiddleware(['nursery']), nurseryController.updateOrderStatus);
-
-// Dashboard
 router.get('/dashboard-summary', verifyToken, roleMiddleware(['nursery']), nurseryController.getDashboardSummary);
 
-module.exports = router;
+// ============================================================
+// ADMIN ROUTES
+// ============================================================
+router.get('/admin/nurseries', verifyToken, roleMiddleware(['admin']), nurseryController.getAllNurseries);
+router.get('/admin/orders', verifyToken, roleMiddleware(['admin']), nurseryController.getAllOrders);
+router.put('/admin/nurseries/:id/status', verifyToken, roleMiddleware(['admin']), nurseryController.updateNurseryStatus);
 
+module.exports = router;

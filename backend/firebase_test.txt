@@ -1,0 +1,1 @@
+✅ Firebase Admin SDK initialized (service-account.json)

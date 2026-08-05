@@ -1,0 +1,31 @@
+🔒 Google OAuth Client ID: 
+🔒 Google OAuth Client Secret (masked): not-set
+↩️ Callback path: /api/auth/google/callback
+🔓 Google OAuth skipped — GOOGLE_CLIENT_ID / SECRET not configured.
+✅ Firebase Admin SDK initialized (service-account.json)
+⚠️ Database connection failed — running without database: 
+⚠️ Auth, user, and admin routes requiring Postgres will return errors.
+⚠️ Firebase-based features (nursery, tasks) will still work.
+ℹ️  [INFO]  Cleanup job initialized {}
+node:events:487
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8080
+    at Server.setupListenHandle [as _listen2] (node:net:2009:16)
+    at listenInCluster (node:net:2066:12)
+    at Server.listen (node:net:2171:7)
+    at app.listen (c:\Users\Tech CraftX\Desktop\Krishi-Ai\Krishii-AI\backend\node_modules\express\lib\application.js:635:24)
+    at start (c:\Users\Tech CraftX\Desktop\Krishi-Ai\Krishii-AI\backend\server.js:24:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:2045:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 8080
+}
+
+Node.js v24.17.0

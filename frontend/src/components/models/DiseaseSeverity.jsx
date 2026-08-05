@@ -64,7 +64,7 @@ export default function DiseaseSeverity() {
     <div className="min-h-screen bg-[#f7faf8] pt-20 sm:pt-24 font-sans">
       <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-14 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-7xl">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl flex items-center gap-3">
+          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl flex flex-wrap items-center gap-2 sm:gap-3 leading-tight">
             <Activity className="text-lime-300" /> Severity Assessment
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-emerald-50/80">
@@ -85,7 +85,7 @@ export default function DiseaseSeverity() {
               onClick={() => document.getElementById('severity-img-input')?.click()}
               onDrop={(e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); }}
               onDragOver={(e) => e.preventDefault()}
-              className="relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 transition hover:border-emerald-400"
+              className="relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 sm:p-8 transition hover:border-emerald-400"
             >
               {preview ? (
                 <div className="relative">

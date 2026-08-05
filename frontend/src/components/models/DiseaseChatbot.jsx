@@ -47,7 +47,7 @@ export default function DiseaseChatbot() {
     <div className="min-h-screen bg-[#f7faf8] pt-20 sm:pt-24 font-sans">
       <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-10 sm:px-6 sm:py-14">
         <div className="mx-auto max-w-7xl">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl flex items-center gap-3">
+          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl flex flex-wrap items-center gap-2 sm:gap-3 leading-tight">
             <Bot className="text-lime-300" /> AI Plant Doctor
           </h1>
           <p className="mt-2 text-sm text-emerald-50/80">Ask anything about plant diseases, treatments, and prevention.</p>
@@ -58,14 +58,14 @@ export default function DiseaseChatbot() {
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-emerald-950/10">
           {/* Context Bar */}
           {(plant || disease) && (
-            <div className="bg-emerald-50 border-b border-emerald-100 px-5 py-3 text-xs text-emerald-700 flex gap-4">
+            <div className="bg-emerald-50 border-b border-emerald-100 px-5 py-3 text-xs text-emerald-700 flex flex-wrap gap-2 sm:gap-4">
               {plant && <span>🌱 Plant: <strong>{plant}</strong></span>}
               {disease && <span>🦠 Disease: <strong>{disease}</strong></span>}
             </div>
           )}
 
           {/* Chat Messages */}
-          <div className="h-[500px] overflow-y-auto p-5 space-y-4 bg-slate-50/50">
+          <div className="h-[60vh] min-h-[400px] sm:h-[500px] overflow-y-auto p-5 space-y-4 bg-slate-50/50">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
                 {msg.role === 'bot' && (

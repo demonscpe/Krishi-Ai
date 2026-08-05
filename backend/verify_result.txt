@@ -1,0 +1,4 @@
+OUTPUT:
+HEALTH: 200 Krishi-Ai Backend Running
+SEED status: 200
+SEED body: {"message":"Database seeded successfully","nurseries":30,"crops":874,"reviews":229,"orders":120,"wishlist":120}

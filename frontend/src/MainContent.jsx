@@ -89,13 +89,20 @@ import { DiseaseProvider } from './context/DiseaseContext';
 
 // Nursery Platform
 import NurseryHub from './components/models/NurseryHub';
-import NurserySearch from './components/models/NurserySearch';
-import NurseryOrders from './components/models/NurseryOrders';
-import NurseryInventory from './components/models/NurseryInventory';
-import NurseryDashboard from './components/models/NurseryDashboard';
 import CropHub from './components/models/CropDashboard';
-import NurseryProfile from './components/models/NurseryProfile';
 import { NurseryProvider } from './context/NurseryContext';
+// Nursery Marketplace (new premium UI)
+import NurseryMarketplace from './components/nursery/NurseryMarketplace';
+import SearchResults from './components/nursery/SearchResults';
+import NurseryMapView from './components/nursery/NurseryMapView';
+import CropDetails from './components/nursery/CropDetails';
+import NurseryProfilePage from './components/nursery/NurseryProfilePage';
+import WishlistPage from './components/nursery/WishlistPage';
+import CartPage from './components/nursery/CartPage';
+import CheckoutPage from './components/nursery/CheckoutPage';
+import OrdersPage from './components/nursery/OrdersPage';
+import NotificationsPage from './components/nursery/NotificationsPage';
+import ChatPage from './components/nursery/ChatPage';
 
 const MainContent = () => {
   UseScrollToTop();
@@ -154,13 +161,19 @@ const MainContent = () => {
                 <Route path="/disease/treatment" element={<ProtectedRoute><DiseaseProvider><TreatmentRecommendation /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/prevention" element={<ProtectedRoute><DiseaseProvider><DiseasePrevention /></DiseaseProvider></ProtectedRoute>} />
                 <Route path="/disease/chatbot" element={<ProtectedRoute><DiseaseProvider><DiseaseChatbot /></DiseaseProvider></ProtectedRoute>} />
-                {/* Nursery Hub */}
+{/* Nursery Marketplace */}
                 <Route path="/nursery" element={<ProtectedRoute><NurseryProvider><NurseryHub /></NurseryProvider></ProtectedRoute>} />
-                <Route path="/nursery/search" element={<ProtectedRoute><NurseryProvider><NurserySearch /></NurseryProvider></ProtectedRoute>} />
-                <Route path="/nursery/orders" element={<ProtectedRoute><NurseryProvider><NurseryOrders /></NurseryProvider></ProtectedRoute>} />
-                <Route path="/nursery/inventory" element={<ProtectedRoute><NurseryProvider><NurseryInventory /></NurseryProvider></ProtectedRoute>} />
-                <Route path="/nursery/dashboard" element={<ProtectedRoute><NurseryProvider><NurseryDashboard /></NurseryProvider></ProtectedRoute>} />
-                <Route path="/nursery/profile" element={<ProtectedRoute><NurseryProvider><NurseryProfile /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/marketplace" element={<ProtectedRoute><NurseryProvider><NurseryMarketplace /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/results" element={<ProtectedRoute><NurseryProvider><SearchResults /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/map" element={<ProtectedRoute><NurseryProvider><NurseryMapView /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/crop/:id" element={<ProtectedRoute><NurseryProvider><CropDetails /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/profile/:id" element={<ProtectedRoute><NurseryProvider><NurseryProfilePage /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/wishlist" element={<ProtectedRoute><NurseryProvider><WishlistPage /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/cart" element={<ProtectedRoute><NurseryProvider><CartPage /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/checkout" element={<ProtectedRoute><NurseryProvider><CheckoutPage /></NurseryProvider></ProtectedRoute>} />
+<Route path="/nursery/orders" element={<ProtectedRoute><NurseryProvider><OrdersPage /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/notifications" element={<ProtectedRoute><NurseryProvider><NotificationsPage /></NurseryProvider></ProtectedRoute>} />
+                <Route path="/nursery/chat/:id" element={<ProtectedRoute><NurseryProvider><ChatPage /></NurseryProvider></ProtectedRoute>} />
                 <Route path="/crop/dashboard" element={<ProtectedRoute><CropHub /></ProtectedRoute>} />
                 <Route path="/crop_recommendation" element={<ProtectedRoute><CropRotationRecommendation /></ProtectedRoute>} />
                 <Route path="/crop-identification" element={<ProtectedRoute><Cropidentification /></ProtectedRoute>} />

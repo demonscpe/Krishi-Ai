@@ -34,7 +34,7 @@ export default function DiseasePrevention() {
     <div className="min-h-screen bg-[#f7faf8] pt-20 sm:pt-24 font-sans">
       <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-14 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-7xl">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl flex items-center gap-3"><Shield className="text-lime-300" /> Prevention Guide</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl flex flex-wrap items-center gap-2 sm:gap-3 leading-tight"><Shield className="text-lime-300 shrink-0" /> Prevention Guide</h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-emerald-50/80">Learn how to prevent diseases and protect your crops.</p>
         </div>
       </section>
