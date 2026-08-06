@@ -10,6 +10,7 @@ const rentRoutes = require("./modules/rent/rent.routes");
 const shopRoutes = require("./modules/shop/product.routes");
 const cropRoutes = require("./modules/crop/crop.routes");
 const nurseryRoutes = require("./modules/nursery/nursery.routes");
+const marketRoutes = require("./modules/market/market.routes");
 
 const errorMiddleware = require("./middleware/error.middleware");
 
@@ -29,6 +30,7 @@ app.use("/api/rent", rentRoutes);
 app.use("/api/shop", shopRoutes);
 app.use("/api/crop", cropRoutes);
 app.use("/api/nursery", nurseryRoutes);
+app.use("/api/market", marketRoutes);
 
 // Health check
 app.get("/", (req, res) => {
