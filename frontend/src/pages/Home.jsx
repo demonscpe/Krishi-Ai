@@ -55,7 +55,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen bg-white font-poppins text-slate-900">
+    <div className="home-jakarta relative min-h-screen bg-white text-slate-900">
       <ToastContainer
         position="top-center"
         autoClose={4000}

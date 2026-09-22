@@ -10,6 +10,18 @@ import bgHero from "../../assets/bgHero.png";
 
 const soilModules = [
   {
+    id: 'fertilizer-advisor',
+    title: 'Fertilizer Advisor & Identification',
+    description: 'AI vision identification of fertilizer bags, prills & bottles with NPK meters & advisory.',
+    icon: Sparkles,
+    color: 'bg-emerald-600',
+    gradient: 'from-emerald-600 to-green-700',
+    lightBg: 'bg-emerald-50',
+    lightText: 'text-emerald-700',
+    path: '/fertilizer-advisor',
+    features: ['Dual-mode Live Camera', 'Chemical & Bio Analysis', 'Agri-Expert Chat Assistant'],
+  },
+  {
     id: 'image-analysis',
     title: 'Soil Image Analysis',
     description: 'Upload a soil photo to analyze type, color, texture, and condition using AI vision.',

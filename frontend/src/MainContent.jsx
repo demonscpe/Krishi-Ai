@@ -13,6 +13,7 @@ import SoilImageAnalysis from './mains/soil/SoilImageAnalysis';
 import SoilTestInput from './mains/soil/SoilTestInput';
 import SoilHealthAnalyzer from './mains/soil/SoilHealthAnalyzer';
 import SoilFertilizerRecommendation from './mains/soil/SoilFertilizerRecommendation';
+import FertilizerAdvisor from './mains/soil/FertilizerAdvisor';
 import SoilDetection from './mains/soil/SoilDetection';
 import SoilHealthAnalysis from './mains/soil/SoilHealthAnalysis';
 import SoilHealthRating from './mains/soil/SoilHealthRating';
@@ -142,6 +143,8 @@ const MainContent = () => {
                 <Route path="/water-management" element={<ProtectedRoute><WaterManagement /></ProtectedRoute>} />
                 {/* Soil Hub */}
                 <Route path="/soil" element={<ProtectedRoute><SoilHub /></ProtectedRoute>} />
+                <Route path="/fertilizer-advisor" element={<ProtectedRoute><FertilizerAdvisor /></ProtectedRoute>} />
+                <Route path="/soil/fertilizer-advisor" element={<ProtectedRoute><FertilizerAdvisor /></ProtectedRoute>} />
                 <Route path="/soil/image-analysis" element={<ProtectedRoute><SoilImageAnalysis /></ProtectedRoute>} />
                 <Route path="/soil/test-input" element={<ProtectedRoute><SoilTestInput /></ProtectedRoute>} />
                 <Route path="/soil/health-analyzer" element={<ProtectedRoute><SoilHealthAnalyzer /></ProtectedRoute>} />

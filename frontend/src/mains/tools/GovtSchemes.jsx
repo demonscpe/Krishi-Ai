@@ -148,7 +148,7 @@ const GovtSchemes = () => {
 
       <main className="relative z-10 mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20">
         <div className="-mt-7">
-          <div className="bg-white border border-slate-200 rounded-3xl shadow-2xl shadow-emerald-950/10 p-6 sm:p-10">
+          <div className="rounded-3xl border border-emerald-400/15 bg-gradient-to-br from-slate-950 via-emerald-950 to-slate-900 p-6 shadow-2xl shadow-emerald-950/25 sm:p-10">
         <button onClick={() => navigate(-1)} className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-sm hover:bg-white/20 transition-all">
           <ArrowLeft size={16} /> Back
         </button>

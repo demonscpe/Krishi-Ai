@@ -35,12 +35,12 @@ const Navbar = () => {
 
   const protectedPaths = new Set([
     '/chatbot', '/crop', '/crop_recommendation', '/crop_Rotation_AI',
-    '/crop-identification', '/water-management', '/soil',
+    '/crop-identification', '/water-management', '/soil', '/fertilizer-advisor', '/soil/fertilizer-advisor',
     '/disease', '/TaskReminder', '/GeminiChat',
     '/PlantTaskReminder', '/Climate', '/nursery', '/nursery/search', '/nursery/orders',
     '/nursery/inventory', '/nursery/dashboard', '/nursery/profile',
   ]);
-
+  
   const closeAll = () => {
     setIsMenuOpen(false);
     setOpenDropdown(null);
@@ -108,11 +108,12 @@ const Navbar = () => {
       ],
     },
     {
-key: "soil",
+      key: "soil",
       label: "Soil",
-      paths: ["/soil", "/soil/image-analysis", "/soil/test-input", "/soil/health-analyzer", "/soil/fertilizer", "/soil/quality", "/soil/detection", "/soil/health-analysis", "/soil/health-rating", "/soil/visual-analysis"],
+      paths: ["/soil", "/fertilizer-advisor", "/soil/fertilizer-advisor", "/soil/image-analysis", "/soil/test-input", "/soil/health-analyzer", "/soil/fertilizer", "/soil/quality", "/soil/detection", "/soil/health-analysis", "/soil/health-rating", "/soil/visual-analysis"],
       items: [
         { to: "/soil", label: "Soil Hub Dashboard" },
+        { to: "/fertilizer-advisor", label: "Fertilizer Advisor (AI Vision)" },
         { to: "/soil/image-analysis", label: "Soil Image Analysis" },
         { to: "/soil/test-input", label: "Soil Test Input" },
         { to: "/soil/health-analyzer", label: "Soil Health Analyzer" },
@@ -249,9 +250,11 @@ key: "soil",
               )}
             </div>
           ))}
+                                {/*
                                 <NavLink to="/market" className={navLinkClass} onClick={closeAll}>
                                   Market
                                 </NavLink>
+                                */}
         </div>
 
         <div className="hidden lg:flex items-center gap-4">
@@ -321,10 +324,12 @@ key: "soil",
               </div>
             ))}
 
+            {/*
             <NavLink to="/market" onClick={closeAll}
               className={({ isActive }) => `block px-3 py-2.5 rounded-lg text-[14px] font-semibold ${isActive ? "bg-green-50 text-green-700" : "text-gray-700 hover:bg-gray-50"}`}>
               Market
             </NavLink>
+            */}
 
             <div className="pt-3 mt-3 border-t border-gray-100 space-y-2">
               <div className="px-3"><GoogleTranslate /></div>

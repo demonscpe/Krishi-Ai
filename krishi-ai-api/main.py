@@ -119,6 +119,8 @@ def create_app() -> FastAPI:
     app.include_router(soil_image_analysis_router)  # POST /api/soil-image-analysis
     app.include_router(soil_test_input_router)       # POST /api/soil-test, POST /api/soil-test/ocr
     app.include_router(soil_health_analyzer_router)  # POST /api/soil-health
+    from routers.fertilizer_advisor import router as fertilizer_advisor_router
+    app.include_router(fertilizer_advisor_router)
     app.include_router(fertilizer_recommendation_router)  # POST /api/fertilizer-recommendation
     app.include_router(soil_vision_router)             # POST /api/soil-vision/analyze, POST /api/soil-vision/chat
     

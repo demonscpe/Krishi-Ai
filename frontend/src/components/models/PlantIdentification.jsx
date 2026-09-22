@@ -7,11 +7,6 @@ import { DiseaseContext } from '../../context/DiseaseContext';
 
 const API_BASE = import.meta.env.VITE_CROP_API_URL || 'http://localhost:8000';
 
-const SUGGESTED_CROPS = [
-  'Tomato', 'Potato', 'Rice', 'Wheat', 'Maize', 'Cotton',
-  'Mango', 'Banana', 'Apple', 'Grapes', 'Chilli', 'Brinjal'
-];
-
 export default function PlantIdentification() {
   const { setPlant, setDisease } = useContext(DiseaseContext);
   const [images, setImages] = useState([]);
@@ -174,20 +169,6 @@ export default function PlantIdentification() {
                 onChange={(e) => handleFiles(e.target.files)}
               />
             </div>
-
-            {/* Quick crop chips */}
-            {!result && (
-              <div className="mt-4">
-                <p className="text-xs font-bold uppercase tracking-[0.1em] text-slate-400 mb-2">Common plants detected</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {SUGGESTED_CROPS.map(crop => (
-                    <span key={crop} className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                      {crop}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Submit */}
             <button

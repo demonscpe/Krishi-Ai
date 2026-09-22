@@ -51,11 +51,11 @@ export default function NewsForum() {
   useEffect(() => { getData(); }, [getData]);
 
   const categories = [
-    { name: 'Agriculture', search: 'smart agriculture' },
-    { name: 'Organic Farming', search: 'organic farming' },
-    { name: 'Crops', search: 'crops' },
-    { name: 'Livestock', search: 'livestock' },
-    { name: 'Policies', search: 'agriculture policies' },
+    { name: 'Smart Agriculture', search: 'smart agriculture technology' },
+    { name: 'AI in Farming', search: 'artificial intelligence agriculture' },
+    { name: 'Precision Farming', search: 'precision agriculture technology' },
+    { name: 'Farm Robotics', search: 'agricultural robotics automation' },
+    { name: 'Climate Tech', search: 'climate smart agriculture technology' },
   ];
 
   return (
@@ -65,13 +65,13 @@ export default function NewsForum() {
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-100">
-              <Sparkles size={14} className="text-lime-300" /> Agriculture news
+              <Sparkles size={14} className="text-lime-300" /> Premium agri-tech intelligence
             </div>
             <h1 className="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
               News Forum
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-emerald-50/80 sm:text-lg">
-              Stay informed with the latest news, trends, and innovations in modern agriculture.
+              Explore the latest AI breakthroughs, precision tools, robotics, and climate-smart innovations shaping the future of farming.
             </p>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function NewsForum() {
             <div className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto mb-6">
               <input type="text" value={customSearch} onChange={(e) => setCustomSearch(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && customSearch.trim() && setSearch(customSearch.trim())}
-                placeholder="Search news topics..."
+                placeholder="Search agri-tech topics..."
                 className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100" />
               <button onClick={() => customSearch.trim() && setSearch(customSearch.trim())}
                 className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-6 py-3 text-sm font-bold text-white hover:bg-green-700 transition-all shadow-md">

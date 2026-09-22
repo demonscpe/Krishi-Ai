@@ -15,10 +15,12 @@ const url = {
   airPollution: (lat, lon) => `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}`,
   forecast: (lat, lon) => `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric`,
   geocoding: (query) => `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5`,
+  reverseGeocoding: (lat, lon) => `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1`,
 };
 
 const getDay = (dt) => new Date(dt * 1000).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 const getTime = (ts) => new Date(ts * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+const formatLocation = ({ name, state, country }) => `${name}${state ? `, ${state}` : ''}${country ? `, ${country}` : ''}`;
 
 const WeatherDetail = ({ icon: Icon, label, value }) => (
   <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
@@ -70,8 +72,9 @@ export default function Climate() {
 
   const handleSuggestionClick = (location) => {
     const { lat, lon, name, state, country } = location;
-    setSelectedLocation(`${name}${state ? ', ' + state : ''}, ${country}`);
-    setSearchTerm(`${name}${state ? ', ' + state : ''}, ${country}`);
+    const locationName = formatLocation({ name, state, country });
+    setSelectedLocation(locationName);
+    setSearchTerm(locationName);
     setSuggestions([]);
     fetchWeatherData(lat, lon);
   };
@@ -80,7 +83,19 @@ export default function Climate() {
     if (!navigator.geolocation) { alert('Geolocation is not supported.'); return; }
     setLoading(true);
     navigator.geolocation.getCurrentPosition(
-      (position) => { setSelectedLocation('Your Current Location'); fetchWeatherData(position.coords.latitude, position.coords.longitude); },
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const locations = await fetchData(url.reverseGeocoding(latitude, longitude));
+          const locationName = locations[0] ? formatLocation(locations[0]) : '';
+          setSelectedLocation(locationName);
+          setSearchTerm(locationName);
+        } catch {
+          setSelectedLocation('');
+          setSearchTerm('');
+        }
+        fetchWeatherData(latitude, longitude);
+      },
       () => { setError(true); setLoading(false); }
     );
   };
