@@ -1,7 +1,0 @@
-IMPORT main OK
-Plant-related routes: ['/api/plant-identification']
-GET /docs -> 200
-Created test image: 645 bytes
-POST /api/plant-identification -> 200
-Response: {"plant":"Unknown","confidence":0.0,"common_name":"Unknown","scientific_name":"Unknown","family":"Unknown","description":"Unable to analyze plant image.","health_status":"Unknown","disease":"","disease_confidence":null,"symptoms":"","remedy":"","source":"OpenAI"}
-POST invalid type -> 400

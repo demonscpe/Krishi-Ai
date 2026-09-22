@@ -8,7 +8,7 @@ export default function DiseaseDetection() {
   const { plant, setPlant, disease, setDisease } = useContext(DiseaseContext);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [selectedCrop, setSelectedCrop] = useState(plant || '');
+  // removed selectedCrop: detection will accept any uploaded image
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
@@ -27,7 +27,6 @@ export default function DiseaseDetection() {
 
   const handlePredict = async () => {
     if (!image) { setError('Please upload a plant image.'); return; }
-    if (!selectedCrop) { setError('Please select or enter a plant type.'); return; }
 
     setIsLoading(true);
     setError(null);
@@ -37,7 +36,6 @@ export default function DiseaseDetection() {
       const base = import.meta.env.VITE_CROP_API_URL || 'http://localhost:8000';
       const formData = new FormData();
       formData.append('image', image);
-      formData.append('plant', selectedCrop);
 
       const res = await fetch(`${base}/api/disease-detection`, {
         method: 'POST',
@@ -47,7 +45,7 @@ export default function DiseaseDetection() {
       if (!res.ok) throw new Error(data.detail || 'Detection failed');
 
       setResult(data);
-      setPlant(selectedCrop);
+      if (data.plant) setPlant(data.plant);
       setDisease(data.disease);
     } catch (err) {
       setError(err.message || 'Could not reach the detection service.');
@@ -57,6 +55,12 @@ export default function DiseaseDetection() {
   };
 
   const isHealthy = result?.status === 'Healthy';
+  const diseaseLabel = result
+    ? (typeof result.disease === 'string' ? result.disease : (result.disease?.name ?? JSON.stringify(result.disease)))
+    : '';
+  const statusLabel = result
+    ? (typeof result.status === 'string' ? result.status : JSON.stringify(result.status))
+    : '';
 
   return (
     <div className="min-h-screen bg-[#f7faf8] pt-20 sm:pt-24 font-sans">
@@ -67,7 +71,7 @@ export default function DiseaseDetection() {
             <Bug className="text-lime-300" /> Disease Detection
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-emerald-50/80">
-            Upload a plant image and select the crop type to detect diseases with AI.
+            Upload a plant image and the detector will analyze it to identify diseases using AI.
           </p>
         </div>
       </section>
@@ -112,22 +116,11 @@ export default function DiseaseDetection() {
               <input id="disease-img-input" type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e.target.files[0])} />
             </div>
 
-            {/* Crop Select */}
-            <div className="mt-4">
-              <label className="text-xs font-extrabold uppercase tracking-[0.1em] text-slate-600">Plant Type</label>
-              <select
-                value={selectedCrop}
-                onChange={(e) => setSelectedCrop(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-100"
-              >
-                <option value="">Select plant type...</option>
-                {CROPS.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
+            {/* Plant type selection removed — detector accepts any image */}
 
             <button
               onClick={handlePredict}
-              disabled={isLoading || !image || !selectedCrop}
+              disabled={isLoading || !image}
               className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-700/20 transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isLoading ? 'Analyzing...' : 'Detect Disease'}
@@ -151,9 +144,9 @@ export default function DiseaseDetection() {
                   <div className={`rounded-2xl border p-5 backdrop-blur-sm ${isHealthy ? 'bg-green-500/20 border-green-300/30' : 'bg-red-500/20 border-red-300/30'}`}>
                     <div className="flex items-center gap-2 mb-2">
                       {isHealthy ? <CheckCircle2 size={20} className="text-green-300" /> : <AlertTriangle size={20} className="text-red-300" />}
-                      <span className={`text-xs font-bold uppercase tracking-wider ${isHealthy ? 'text-green-200' : 'text-red-200'}`}>{result.status}</span>
+                      <span className={`text-xs font-bold uppercase tracking-wider ${isHealthy ? 'text-green-200' : 'text-red-200'}`}>{statusLabel}</span>
                     </div>
-                    <h3 className="text-2xl font-extrabold">{result.disease}</h3>
+                    <h3 className="text-2xl font-extrabold">{diseaseLabel}</h3>
                     {result.confidence != null && (
                       <p className="mt-2 text-sm text-emerald-100">Confidence: {result.confidence.toFixed(1)}%</p>
                     )}

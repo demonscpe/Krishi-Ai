@@ -25,7 +25,7 @@ const Footer = () => {
     { name: 'Price Prediction', path: '/prices' },
     { name: 'Climate Forecast', path: '/Climate' },
     { name: 'Disease Detection', path: '/disease' },
-    { name: 'Discussion Forum', path: '/discussion' },
+    // Discussion Forum link removed
   ];
 
   const legalLinks = [

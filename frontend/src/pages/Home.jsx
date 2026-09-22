@@ -201,13 +201,7 @@ export default function Home() {
         <FAQ />
       </div>
 
-      {/* --- FLOATING CHATBOT BUTTON --- */}
-      <button 
-        onClick={handleChatBotAuthentication}
-        className="fixed bottom-8 right-8 p-5 bg-green-600 text-white rounded-full shadow-2xl hover:bg-green-700 transition-all duration-300 hover:scale-110 z-50 flex items-center justify-center"
-      >
-        <FaComment size={24} />
-      </button>
+      {/* Floating chatbot button removed per request */}
     </div>
   );
 }

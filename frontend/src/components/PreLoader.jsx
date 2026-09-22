@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { Leaf, Sparkles } from 'lucide-react';
+import '../index.css';
 
 const Preloader = () => {
   const [progress, setProgress] = useState(0);
@@ -6,289 +9,99 @@ const Preloader = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        // Slower start, faster toward end for a premium feel
-        const inc = prev < 30 ? 1 : prev < 70 ? 2 : 3;
-        return prev + inc;
+        if (prev >= 100) { clearInterval(interval); return 100; }
+        return prev + 2;
       });
-    }, 60);
+    }, 80);
     return () => clearInterval(interval);
   }, []);
 
-  // Canvas ring geometry
-  const radius = 120;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (progress / 100) * circumference;
-
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 99999,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'radial-gradient(ellipse at 50% 0%, #0b1f12 0%, #060f08 55%, #030a05 100%)',
-        overflow: 'hidden',
-        fontFamily: "'Poppins', 'Segoe UI', system-ui, sans-serif",
-      }}
-    >
-      {/* Ambient glow blobs */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '12%',
-          left: '10%',
-          width: 'clamp(160px, 22vw, 320px)',
-          height: 'clamp(160px, 22vw, 320px)',
-          background: 'radial-gradient(circle, rgba(34,197,94,0.25) 0%, transparent 70%)',
-          borderRadius: '50%',
-          filter: 'blur(60px)',
-          animation: 'krishiFloat 6s ease-in-out infinite',
-        }}
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center overflow-hidden bg-[#07130d] px-6 font-poppins text-white">
+      <motion.div
+        className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.35, 0.7, 0.35] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '10%',
-          right: '8%',
-          width: 'clamp(200px, 26vw, 380px)',
-          height: 'clamp(200px, 26vw, 380px)',
-          background: 'radial-gradient(circle, rgba(16,185,129,0.22) 0%, transparent 70%)',
-          borderRadius: '50%',
-          filter: 'blur(70px)',
-          animation: 'krishiFloat 8s ease-in-out infinite reverse',
-        }}
+      <motion.div
+        className="pointer-events-none absolute -bottom-40 -right-24 h-[30rem] w-[30rem] rounded-full bg-lime-400/10 blur-3xl"
+        animate={{ scale: [1.1, 1, 1.1], opacity: [0.45, 0.2, 0.45] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       />
-
-      {/* Animated leaf particles */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-        {[
-          { left: '8%', top: '70%', delay: '0s', size: '14px' },
-          { left: '20%', top: '20%', delay: '1.2s', size: '10px' },
-          { left: '70%', top: '75%', delay: '0.6s', size: '16px' },
-          { left: '85%', top: '25%', delay: '1.8s', size: '11px' },
-          { left: '45%', top: '85%', delay: '2.4s', size: '12px' },
-          { left: '60%', top: '12%', delay: '0.9s', size: '13px' },
-        ].map((p, i) => (
-          <div
-            key={i}
-            style={{
-              position: 'absolute',
-              left: p.left,
-              top: p.top,
-              width: p.size,
-              height: p.size,
-              background: 'linear-gradient(135deg, #4ade80, #16a34a)',
-              borderRadius: '0 100% 0 100%',
-              opacity: 0.35,
-              animation: 'krishiFloat 5s ease-in-out infinite',
-              animationDelay: p.delay,
-            }}
+      <div className="relative z-10 flex w-full max-w-sm flex-col items-center text-center">
+        <motion.div
+          className="relative mb-10 flex h-52 w-52 items-center justify-center"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <motion.div
+            className="absolute inset-3 rounded-full border border-emerald-300/20"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
           />
-        ))}
-      </div>
-
-      {/* Center content */}
-      <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        {/* Circular progress ring with plant icon */}
-        <div style={{ position: 'relative', width: 'clamp(150px, 24vw, 260px)', height: 'clamp(150px, 24vw, 260px)' }}>
-          <svg width="100%" height="100%" viewBox="0 0 260 260" style={{ transform: 'rotate(-90deg)' }}>
-            <defs>
-              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#4ade80" />
-                <stop offset="50%" stopColor="#22c55e" />
-                <stop offset="100%" stopColor="#15803d" />
-              </linearGradient>
-            </defs>
-            {/* Track */}
-            <circle
-              cx="130"
-              cy="130"
-              r={radius}
-              fill="none"
-              stroke="rgba(255,255,255,0.06)"
-              strokeWidth="10"
-            />
-            {/* Progress */}
-            <circle
-              cx="130"
-              cy="130"
-              r={radius}
-              fill="none"
-              stroke="url(#ringGrad)"
-              strokeWidth="10"
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={offset}
-              style={{
-                transition: 'stroke-dashoffset 0.2s ease',
-                filter: 'drop-shadow(0 0 8px rgba(34,197,94,0.6))',
-              }}
-            />
-          </svg>
-
-          {/* Plant / sprout icon in center */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+          <motion.div
+            className="absolute inset-8 rounded-full border border-dashed border-lime-300/30"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+          />
+          <div className="absolute inset-[3.75rem] rounded-full bg-emerald-300/10 blur-xl" />
+          <motion.div
+            className="relative flex h-24 w-24 items-center justify-center rounded-[2rem] border border-white/15 bg-white/[0.08] shadow-[0_0_50px_rgba(74,222,128,0.2)] backdrop-blur-md"
+            animate={{ y: [0, -8, 0], rotate: [0, 2, 0, -2, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <div style={{ animation: 'krishiBounce 1.6s ease-in-out infinite', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              {/* Stem */}
-              <div style={{ width: 4, height: 'clamp(24px, 4vw, 40px)', background: 'linear-gradient(#4ade80, #15803d)', borderRadius: 4 }} />
-              {/* Leaves */}
-              <div style={{ position: 'relative', width: 'clamp(40px, 6vw, 56px)', height: 'clamp(28px, 4vw, 40px)', marginTop: -6 }}>
-                <div
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    width: '55%',
-                    height: '100%',
-                    background: 'linear-gradient(135deg, #4ade80, #22c55e)',
-                    borderRadius: '100% 0 100% 0',
-                    boxShadow: '0 0 14px rgba(74,222,128,0.5)',
-                    animation: 'krishiLeafL 2s ease-in-out infinite',
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    right: 0,
-                    width: '55%',
-                    height: '100%',
-                    background: 'linear-gradient(135deg, #22c55e, #15803d)',
-                    borderRadius: '0 100% 0 100%',
-                    boxShadow: '0 0 14px rgba(34,197,94,0.5)',
-                    animation: 'krishiLeafR 2s ease-in-out infinite',
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+            <Leaf className="h-12 w-12 -rotate-12 text-lime-300" strokeWidth={1.5} />
+          </motion.div>
+          <motion.div
+            className="absolute right-7 top-8 text-lime-200"
+            animate={{ y: [-2, -10, -2], opacity: [0, 1, 0] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <Sparkles className="h-4 w-4" />
+          </motion.div>
+        </motion.div>
 
-        {/* Title */}
-        <h1
-          style={{
-            margin: 'clamp(16px, 3vw, 28px) 0 4px',
-            fontSize: 'clamp(30px, 6vw, 64px)',
-            fontWeight: 800,
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
-            background: 'linear-gradient(135deg, #4ade80, #16a34a, #bbf7d0, #15803d)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            textAlign: 'center',
-            lineHeight: 1.05,
-            userSelect: 'none',
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.6 }}
         >
-          Krishi-AI
-        </h1>
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.5em] text-lime-300/70">Smart farming, naturally</p>
+          <h1 className="high-font text-5xl font-black tracking-wide text-white sm:text-6xl">Krishi<span className="text-lime-300">-AI</span></h1>
+        </motion.div>
 
-        {/* Tagline */}
-        <p
-          style={{
-            margin: 0,
-            fontSize: 'clamp(9px, 1.6vw, 13px)',
-            letterSpacing: '0.45em',
-            textTransform: 'uppercase',
-            color: 'rgba(74,222,128,0.6)',
-            fontWeight: 600,
-            textAlign: 'center',
-            paddingLeft: '0.45em',
-          }}
+        <motion.div
+          className="mt-12 w-full max-w-xs"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.6 }}
         >
-          Premium Agriculture
-        </p>
-
-        {/* Progress bar */}
-        <div style={{ width: 'clamp(160px, 30vw, 280px)', marginTop: 'clamp(18px, 3vw, 30px)' }}>
-          <div
-            style={{
-              height: 3,
-              width: '100%',
-              background: 'rgba(255,255,255,0.06)',
-              borderRadius: 999,
-              overflow: 'hidden',
-            }}
-          >
-            <div
-              style={{
-                height: '100%',
-                width: `${progress}%`,
-                background: 'linear-gradient(90deg, #16a34a, #4ade80, #bbf7d0)',
-                borderRadius: 999,
-                transition: 'width 0.2s ease',
-                boxShadow: '0 0 10px rgba(74,222,128,0.6)',
-              }}
+          <div className="mb-3 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.25em] text-white/40">
+            <span>Growing your experience</span>
+            <span className="text-lime-300">{progress}%</span>
+          </div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-white/10 p-px">
+            <motion.div
+              className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-lime-300 to-white shadow-[0_0_14px_rgba(190,242,100,0.8)]"
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
             />
           </div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginTop: 8,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 'clamp(8px, 1.4vw, 11px)',
-                color: 'rgba(74,222,128,0.45)',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Loading
-            </span>
-            <span
-              style={{
-                fontSize: 'clamp(12px, 2vw, 16px)',
-                fontWeight: 700,
-                color: '#4ade80',
-                fontVariantNumeric: 'tabular-nums',
-              }}
-            >
-              {progress}%
-            </span>
+          <div className="mt-4 flex justify-center gap-1.5">
+            {[0, 1, 2].map((dot) => (
+              <motion.span
+                key={dot}
+                className="h-1 w-1 rounded-full bg-lime-300"
+                animate={{ opacity: [0.25, 1, 0.25], scale: [0.8, 1.2, 0.8] }}
+                transition={{ duration: 1.2, repeat: Infinity, delay: dot * 0.18 }}
+              />
+            ))}
           </div>
-        </div>
+        </motion.div>
       </div>
-
-      {/* Keyframes */}
-      <style>{`
-        @keyframes krishiBounce {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-8px) scale(1.04); }
-        }
-        @keyframes krishiLeafL {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(-12deg); }
-        }
-        @keyframes krishiLeafR {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(12deg); }
-        }
-        @keyframes krishiFloat {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-14px); }
-        }
-      `}</style>
     </div>
   );
 };
 
-export default Preloader;
+export default Preloader; 

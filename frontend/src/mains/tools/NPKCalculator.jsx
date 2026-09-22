@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calculator, Leaf, Droplets, Beaker, ArrowLeft, Sparkles, Loader2, AlertCircle, CheckCircle2, Sun, TestTube } from 'lucide-react';
+import bgHero from "../../assets/bgHero.png";
 
 const CROPS = [
   'Rice', 'Wheat', 'Maize', 'Cotton', 'Sugarcane', 'Tomato', 'Potato', 'Onion',
@@ -105,19 +106,28 @@ const NPKCalculator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 pt-20 font-sans">
-      <div className="mx-auto max-w-6xl px-4 py-8">
+    <div className="w-full min-h-screen bg-[#f7faf8] pt-16 sm:pt-20 font-sans">
+      <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-14 sm:px-6 sm:py-20">
+        <div className="absolute inset-0 -z-20 bg-cover bg-center opacity-20" style={{ backgroundImage: `url(${bgHero})` }} />
+        <div className="mx-auto max-w-7xl text-center">
+          <div className="max-w-3xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-100">
+              <Sparkles size={14} /> Nutrient Calculator
+            </div>
+            <h1 className="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">NPK Fertilizer Calculator</h1>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-emerald-50/80 sm:text-lg">Calculate exact N-P-K requirements based on your crop and soil test results</p>
+          </div>
+        </div>
+      </section>
+
+      <main className="relative z-10 mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20">
+        <div className="-mt-7">
+          <div className="bg-white border border-slate-200 rounded-3xl shadow-2xl shadow-emerald-950/10 p-6 sm:p-10">
         <button onClick={() => navigate(-1)} className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-sm hover:bg-white/20 transition-all">
           <ArrowLeft size={16} /> Back
         </button>
 
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-400/20 to-teal-400/20 border border-emerald-400/30 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300 mb-4">
-            <Sparkles size={14} /> Nutrient Calculator
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white">NPK Fertilizer Calculator</h1>
-          <p className="mt-3 text-emerald-200/70 max-w-xl mx-auto">Calculate exact N-P-K requirements based on your crop and soil test results</p>
-        </div>
+        {/* page content header is provided by the hero section above */}
 
         {/* Steps indicator */}
         <div className="flex items-center justify-center gap-4 mb-10">
@@ -296,7 +306,9 @@ const NPKCalculator = () => {
             )}
           </div>
         </div>
-      </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

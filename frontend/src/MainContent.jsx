@@ -54,7 +54,6 @@ import Licensing from './components/Licensing';
 import Feedback from './components/Feedback';
 import SoilTestingCentres from './components/SoilTestingCenters';
 import NewsForum from './components/NewsForum';
-import DiscussionPage from './components/Discussions';
 //AgroRentAI
 import HeroSectionRent from './AgroRentAI/HeroSectionRent';
 import NavigateProducts from './AgroRentAI/NavigateProducts';
@@ -72,7 +71,6 @@ import AccountVerificationPage from './components/EmailVerification';
 import OAuthSuccess from './components/OAuthSuccess';
 import GeminiChat from './mains/tools/GeminiChat';
 import ResendVerificationPage from './components/ResendVerification';
-import DiscussionForum from './components/DiscussionForum';
 import AiChatbot from './components/AiChatbot';
 import WaterManagement from './components/models/WaterManagement';
 import RentSupportPage from './AgroRentAI/components/RentSupportPage';
@@ -207,7 +205,7 @@ const MainContent = () => {
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
                 <Route path="/news" element={<NewsForum />} />
                 <Route path="/BestPractices" element={<BestPractices />} />
-                <Route path="/DiscussionPage" element={<DiscussionPage />} />
+                {/* Discussion routes removed/hidden */}
                 {/* AgroRentAI Routes */}
                 <Route path="/HeroSectionRent" element={<HeroSectionRent />} />
                 <Route path="/NavigateProducts" element={<NavigateProducts />} />
@@ -218,7 +216,7 @@ const MainContent = () => {
                 <Route path="/RentAdminDashboard" element={<RentAdminDashboard />} />
                 <Route path="/RentUserDashboard" element={<ProtectedRoute><RentUserDashboard /></ProtectedRoute>} />
                 <Route path="/RentSupport" element={<RentSupportPage />} />
-                <Route path="/discussion" element={<DiscussionForum />} />
+                {/* Discussion routes removed/hidden */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Footer />

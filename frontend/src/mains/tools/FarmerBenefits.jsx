@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Search, ArrowLeft, Sparkles, Loader2, AlertCircle, User, MapPin, DollarSign, CheckCircle2, XCircle, HelpCircle } from 'lucide-react';
+import bgHero from "../../assets/bgHero.png";
 
 const INDIAN_STATES = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
@@ -127,19 +128,28 @@ const FarmerBenefits = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 pt-20 font-sans">
-      <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="w-full min-h-screen bg-[#f7faf8] pt-16 sm:pt-20 font-sans">
+      <section className="relative isolate overflow-hidden bg-emerald-950 px-4 py-14 sm:px-6 sm:py-20">
+        <div className="absolute inset-0 -z-20 bg-cover bg-center opacity-20" style={{ backgroundImage: `url(${bgHero})` }} />
+        <div className="mx-auto max-w-7xl text-center">
+          <div className="max-w-3xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-emerald-100">
+              <Sparkles size={14} /> Farmer Welfare
+            </div>
+            <h1 className="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">Farmer Benefit Programs</h1>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-emerald-50/80 sm:text-lg">Check eligibility for PM-KISAN, PM-JAY, Rythu Bharosa, and more welfare schemes</p>
+          </div>
+        </div>
+      </section>
+
+      <main className="relative z-10 mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20">
+        <div className="-mt-7">
+          <div className="bg-white border border-slate-200 rounded-3xl shadow-2xl shadow-emerald-950/10 p-6 sm:p-10">
         <button onClick={() => navigate(-1)} className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-sm hover:bg-white/20 transition-all">
           <ArrowLeft size={16} /> Back
         </button>
 
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-400/20 to-teal-400/20 border border-emerald-400/30 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300 mb-4">
-            <Sparkles size={14} /> Farmer Welfare
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white">Farmer Benefit Programs</h1>
-          <p className="mt-3 text-emerald-200/70 max-w-xl mx-auto">Check eligibility for PM-KISAN, PM-JAY, Rythu Bharosa, and more welfare schemes</p>
-        </div>
+        {/* page content header is provided by the hero section above */}
 
         <div className="relative max-w-md mx-auto mb-10">
           <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
@@ -236,7 +246,9 @@ const FarmerBenefits = () => {
             </div>
           </div>
         )}
-      </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

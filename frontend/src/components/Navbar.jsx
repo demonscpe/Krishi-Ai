@@ -205,7 +205,7 @@ key: "soil",
           <NavLink to="/" end className={navLinkClass} onClick={closeAll}>
             Home
           </NavLink>
-          {allDropdowns.map(({ key, label, items }) => (
+          {allDropdowns.filter(d => d.key !== 'nursery').map(({ key, label, items }) => (
             <div key={key} className="relative">
               <button
                 onClick={() => handleDropdownToggle(key)}
@@ -225,24 +225,26 @@ key: "soil",
               {openDropdown === key && (
                 <div className="absolute top-full left-0 mt-3 w-56 bg-white shadow-xl border border-gray-100 py-2 rounded-xl z-50">
                   <div className="absolute -top-1.5 left-5 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45" />
-                  {items.map(({ to, label: itemLabel, separator }) => {
-                    if (to === "__separator__" || separator) {
-                      return <div key={"sep-" + Math.random()} className="border-t border-gray-100 my-1" />;
-                    }
-                    return (
-                      <NavLink
-                        key={to}
-                        to={to}
-                        className={dropdownItemClass}
-                        onClick={(e) => {
-                          handleProtectedNavigation(e, to, itemLabel);
-                          closeAll();
-                        }}
-                      >
-                        {itemLabel}
-                      </NavLink>
-                    );
-                  })}
+                  {items
+                    .filter((i) => i.to !== '/DiscussionPage' && i.to !== '/discussion')
+                    .map(({ to, label: itemLabel, separator }) => {
+                      if (to === "__separator__" || separator) {
+                        return <div key={"sep-" + Math.random()} className="border-t border-gray-100 my-1" />;
+                      }
+                      return (
+                        <NavLink
+                          key={to}
+                          to={to}
+                          className={dropdownItemClass}
+                          onClick={(e) => {
+                            handleProtectedNavigation(e, to, itemLabel);
+                            closeAll();
+                          }}
+                        >
+                          {itemLabel}
+                        </NavLink>
+                      );
+                    })}
                 </div>
               )}
             </div>
